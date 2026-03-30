@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DEEP RELAY — mpeg.uk</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #07070f;
+      --bg2:       #0d0d1a;
+      --border:    #18182a;
+      --text:      #9090b0;
+      --text-dim:  #404058;
+      --text-hi:   #d0d0e8;
+      --accent:    #e8a020;   /* changes with channel */
+      --ch-alien:  #e8a020;
+      --ch-trek:   #4888cc;
+      --ch-bsg:    #7a8e58;
+      --ch-fw:     #b85530;
+    }
+
+    html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); color: var(--text); }
+    body { font-family: 'Space Grotesk', sans-serif; }
+
+    /* ── scanline overlay ── */
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.06) 3px, rgba(0,0,0,0.06) 4px);
+      pointer-events: none; z-index: 999;
+    }
+
+    /* ── noise grain ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+      background-size: 180px 180px;
+      pointer-events: none; z-index: 998; opacity: 0.6;
+    }
+
+    /* ── layout ── */
+    .shell {
+      display: grid;
+      grid-template-rows: 56px 1fr 44px;
+      height: 100vh;
+      padding: 0 32px;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    /* ── HEADER ── */
+    header {
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      display: flex; align-items: baseline; gap: 14px;
+    }
+    .logo-name {
+      font-size: 15px; font-weight: 700; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--text-hi);
+    }
+    .logo-domain {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; color: var(--text-dim); letter-spacing: 0.08em;
+    }
+
+    .header-right {
+      display: flex; align-items: center; gap: 20px;
+    }
+    .signal-pill {
+      display: flex; align-items: center; gap: 7px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px; text-transform: uppercase;
+      letter-spacing: 0.12em; color: var(--text-dim);
+    }
+    .signal-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: var(--accent);
+      transition: background 0.4s;
+      animation: dotpulse 2.4s ease-in-out infinite;
+    }
+    @keyframes dotpulse { 0%,100% { opacity:1; } 50% { opacity:0.25; } }
+
+    /* ── MAIN ── */
+    main {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      overflow: hidden;
+    }
+
+    /* ── LEFT: player ── */
+    .player {
+      display: flex; flex-direction: column;
+      padding: 32px 36px 28px 0;
+      border-right: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .now-playing { margin-bottom: 28px; }
+    .np-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px; text-transform: uppercase;
+      letter-spacing: 0.16em; color: var(--text-dim); margin-bottom: 8px;
+    }
+    .np-title {
+      font-size: 26px; font-weight: 700; color: var(--text-hi);
+      letter-spacing: -0.01em; line-height: 1.1;
+      transition: color 0.3s;
+    }
+    .np-meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; color: var(--accent);
+      margin-top: 6px; letter-spacing: 0.06em;
+      transition: color 0.3s;
+    }
+
+    /* waveform */
+    .wave-wrap {
+      flex: 1; position: relative; min-height: 120px; margin-bottom: 24px;
+    }
+    #waveform { display: block; width: 100%; height: 100%; min-height: 120px; }
+
+    /* controls */
+    .controls {
+      display: flex; align-items: center; gap: 18px;
+    }
+    .play-btn {
+      width: 44px; height: 44px; border-radius: 50%;
+      border: 1px solid var(--accent); background: transparent;
+      cursor: pointer; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s, border-color 0.3s;
+    }
+    .play-btn:hover { background: rgba(255,255,255,0.04); }
+    .play-btn svg { fill: var(--accent); transition: fill 0.3s; }
+
+    .time-disp {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; color: var(--text-dim); white-space: nowrap;
+      letter-spacing: 0.04em;
+    }
+    .time-disp em { font-style: normal; color: var(--text-hi); }
+
+    .progress-bar {
+      flex: 1; height: 2px; background: var(--border);
+      border-radius: 1px; cursor: pointer; position: relative;
+    }
+    .progress-fill {
+      height: 100%; background: var(--accent);
+      border-radius: 1px; width: 0%;
+      transition: background 0.3s, width 0.4s linear;
+    }
+
+    .vol-wrap {
+      display: flex; align-items: center; gap: 7px; flex-shrink: 0;
+    }
+    .vol-lbl {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px; text-transform: uppercase;
+      letter-spacing: 0.12em; color: var(--text-dim);
+    }
+    input[type=range] {
+      -webkit-appearance: none; width: 72px; height: 2px;
+      background: var(--border); border-radius: 1px; outline: none; cursor: pointer;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 9px; height: 9px;
+      border-radius: 50%; background: var(--accent);
+      transition: background 0.3s; cursor: pointer;
+    }
+
+    /* channels */
+    .channels { margin-top: 28px; padding-top: 22px; border-top: 1px solid var(--border); }
+    .ch-lbl {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px; text-transform: uppercase;
+      letter-spacing: 0.16em; color: var(--text-dim); margin-bottom: 12px;
+    }
+    .ch-tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; }
+
+    .ch-tile {
+      padding: 11px 10px; border: 1px solid var(--border);
+      border-radius: 3px; cursor: pointer;
+      transition: border-color 0.25s, background 0.25s;
+    }
+    .ch-tile:hover { border-color: var(--tile-color); background: rgba(255,255,255,0.015); }
+    .ch-tile.active { border-color: var(--tile-color); background: rgba(255,255,255,0.02); }
+
+    .ch-name {
+      font-size: 10px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.13em;
+      color: var(--tile-color); display: block; margin-bottom: 3px;
+    }
+    .ch-name::before { content: '○ '; font-size: 8px; }
+    .ch-tile.active .ch-name::before { content: '◉ '; }
+
+    .ch-sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px; color: var(--text-dim); display: block;
+    }
+
+    /* ── RIGHT: log ── */
+    .log-panel {
+      display: flex; flex-direction: column;
+      padding: 32px 0 28px 28px; overflow: hidden;
+    }
+    .log-head {
+      display: flex; justify-content: space-between; align-items: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px; text-transform: uppercase;
+      letter-spacing: 0.14em; color: var(--text-dim);
+      margin-bottom: 14px; flex-shrink: 0;
+    }
+    .log-live {
+      color: var(--accent); transition: color 0.3s;
+      animation: blink 1.8s step-end infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    .log-body {
+      flex: 1; overflow-y: auto;
+      -ms-overflow-style: none; scrollbar-width: none;
+      mask-image: linear-gradient(to bottom, transparent 0%, black 7%, black 88%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 7%, black 88%, transparent 100%);
+    }
+    .log-body::-webkit-scrollbar { display: none; }
+
+    .log-entry {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; line-height: 1.75;
+      padding: 7px 0; border-bottom: 1px solid var(--border);
+      opacity: 0; transform: translateY(5px);
+      transition: opacity 0.45s ease, transform 0.45s ease;
+    }
+    .log-entry.in { opacity: 1; transform: none; }
+    .log-entry.mira { opacity: 0; }
+    .log-entry.mira.in { opacity: 0.55; }
+
+    .le-ts { color: var(--text-dim); }
+    .le-src { color: var(--accent); font-weight: 500; transition: color 0.3s; }
+    .le-msg {
+      display: block; padding-left: 10px;
+      color: var(--text); font-style: italic;
+    }
+
+    /* fork prompt */
+    .log-fork {
+      margin: 14px 0; padding: 12px 12px 10px;
+      border: 1px solid var(--accent); border-radius: 3px;
+      transition: border-color 0.3s;
+      opacity: 0; transform: translateY(5px);
+      transition: opacity 0.45s, transform 0.45s;
+    }
+    .log-fork.in { opacity: 1; transform: none; }
+    .fork-lbl {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px; text-transform: uppercase;
+      letter-spacing: 0.14em; color: var(--accent);
+      margin-bottom: 9px; transition: color 0.3s;
+    }
+    .fork-opt {
+      display: block; width: 100%;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px; background: transparent;
+      border: 1px solid var(--border); color: var(--text);
+      padding: 7px 9px; border-radius: 2px;
+      cursor: pointer; text-align: left;
+      line-height: 1.5; margin-bottom: 5px;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .fork-opt:hover { border-color: var(--accent); color: var(--text-hi); }
+    .fork-opt:last-child { margin-bottom: 0; }
+    .fork-note {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px; color: var(--text-dim);
+      margin-top: 8px; font-style: italic;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      display: flex; align-items: center; justify-content: space-between;
+      border-top: 1px solid var(--border);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px; color: var(--text-dim);
+      text-transform: uppercase; letter-spacing: 0.1em;
+    }
+    #footer-r { color: var(--text-dim); transition: color 0.3s; }
+
+    /* ── channel colour vars ── */
+    [data-ch="alien"] { --tile-color: var(--ch-alien); }
+    [data-ch="trek"]  { --tile-color: var(--ch-trek);  }
+    [data-ch="bsg"]   { --tile-color: var(--ch-bsg);   }
+    [data-ch="fw"]    { --tile-color: var(--ch-fw);    }
+
+    /* ── util ── */
+    .hidden { display: none; }
+  </style>
+</head>
+
+<body>
+<div class="shell">
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo">
+      <div class="logo-name">Deep Relay</div>
+      <div class="logo-domain">mpeg.uk</div>
+    </div>
+    <div class="header-right">
+      <div class="signal-pill">
+        <div class="signal-dot"></div>
+        <span id="sig-txt">standby</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main>
+
+    <!-- LEFT -->
+    <div class="player">
+
+      <div class="now-playing">
+        <div class="np-label">now broadcasting</div>
+        <div class="np-title" id="np-title">—</div>
+        <div class="np-meta" id="np-meta">select a channel · press play</div>
+      </div>
+
+      <div class="wave-wrap">
+        <canvas id="waveform"></canvas>
+      </div>
+
+      <div class="controls">
+        <button class="play-btn" id="play-btn" onclick="togglePlay()">
+          <svg id="play-ico" width="16" height="16" viewBox="0 0 16 16">
+            <path d="M5 2.5 L13.5 8 L5 13.5 Z"/>
+          </svg>
+        </button>
+        <div class="time-disp"><em id="ct">00:00</em> / 10:00</div>
+        <div class="progress-bar" id="prog-bar" onclick="seek(event)">
+          <div class="progress-fill" id="prog-fill"></div>
+        </div>
+        <div class="vol-wrap">
+          <span class="vol-lbl">vol</span>
+          <input type="range" min="0" max="1" step="0.01" value="0.85" oninput="setVol(this.value)">
+        </div>
+      </div>
+
+      <div class="channels">
+        <div class="ch-lbl">channel select</div>
+        <div class="ch-tiles">
+          <div class="ch-tile active" data-ch="alien" onclick="selectCh('alien',this)">
+            <span class="ch-name">Alien / WY</span>
+            <span class="ch-sub">LV-426 sector</span>
+          </div>
+          <div class="ch-tile" data-ch="trek" onclick="selectCh('trek',this)">
+            <span class="ch-name">Star Trek</span>
+            <span class="ch-sub">Starfleet ops</span>
+          </div>
+          <div class="ch-tile" data-ch="bsg" onclick="selectCh('bsg',this)">
+            <span class="ch-name">BSG</span>
+            <span class="ch-sub">Colonial fleet</span>
+          </div>
+          <div class="ch-tile" data-ch="fw" onclick="selectCh('fw',this)">
+            <span class="ch-name">Firefly</span>
+            <span class="ch-sub">Border space</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: log -->
+    <div class="log-panel">
+      <div class="log-head">
+        <span>transmission log</span>
+        <span class="log-live" id="log-live">● standby</span>
+      </div>
+      <div class="log-body" id="log-body"></div>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <span>deep relay v0.1 — pilot</span>
+    <span id="footer-r">signal not acquired</span>
+  </footer>
+
+</div>
+
+<audio id="audio" preload="auto">
+  <source src="deep_relay_pilot.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+/* ── Data ── */
+const CH = {
+  alien: {
+    color:  '#e8a020',
+    title:  'WY RELAY — LV-426 SECTOR',
+    meta:   'WEYLAND-YUTANI CORP · 892.44 MHz',
+    tx: [
+      { t:  8,  src:'NRS-117',   msg:'Meridian Station — requesting transit clearance. Cargo manifest sealed. No anomalies on approach.' },
+      { t: 22,  src:'MERIDIAN',  msg:'NRS-117, you are cleared to grid seven-seven. Hold for docking vector.' },
+      { t: 45,  src:'NRS-117',   msg:'Copy. Holding at seven-seven. Speed one-quarter. Nothing unusual out here.' },
+      { t: 67,  src:'WY-LOG',    msg:'Survey report appended: LV-426. Attachment bio_sig_04.dat — classification restricted.' },
+      { t: 90,  src:'MIRA',      msg:'… seven … four … nine … one … three … eight … two …', mira:true },
+      { t:118,  src:'NRS-117',   msg:'Meridian, we are go for final approach. Velocity nominal.' },
+      { t:145,  src:'VALE',      msg:'NRS-117 — reduce speed to one-eighth. Bay doors cycling. Watch your approach vector.' },
+      { t:180,  src:'ROURKE',    msg:'All cargo handlers to loading bay C. Priority manifest incoming.' },
+      { t:220,  src:'WY-LOG',    msg:'Rest-cycle protocol initiated. Science log sealed. End log.' },
+      { t:270,  src:'MIRA',      msg:'… delta … niner … one … one … six … echo …', mira:true },
+      { t:310,  src:'SOLAN',     msg:'The stars do not hurry. Neither should we. The signal will find you. End log.' },
+    ],
+    fork: { t:195, prompt:'MIRA is transmitting on a secondary frequency.',
+      opts:['Stay on main channel','Tune to secondary — monitor MIRA'] }
+  },
+  trek: {
+    color:  '#4888cc',
+    title:  'STARFLEET RELAY — SECTOR 001',
+    meta:   'FEDERATION COMMS · STARDATE 47634.4',
+    tx: [
+      { t:  8, src:'ENTERPRISE',  msg:'Starfleet Command — departing spacedock. Course laid for Neutral Zone. All systems nominal.' },
+      { t: 24, src:'SFCOM',       msg:'Enterprise, you are cleared for departure. Safe journey, Captain.' },
+      { t: 46, src:'COUNSELOR',   msg:'Captain — I am sensing something. Faint. Like an echo of something that has not happened yet.' },
+      { t: 70, src:'OPS',         msg:'Long-range sensors clear. No vessels within forty AU. All quiet.' },
+      { t: 98, src:'SOLAN',       msg:'The question is not where we are going. It is whether we will recognise the destination when we arrive.' },
+      { t:132, src:'SCIENCE',     msg:'Science log, stardate 47634.4. Stellar nursery observed — nineteen new formations in twelve parsecs.' },
+      { t:162, src:'SFCOM',       msg:'All vessels: maintain standard patrol pattern. Sensor sweep interval thirty minutes. Out.' },
+      { t:200, src:'ENTERPRISE',  msg:'Reducing speed to warp two. Holding position pending orders.' },
+      { t:245, src:'SOLAN',       msg:'To rest is not to stop. The mind continues even in silence. This is not absence. This is arrival.' },
+    ],
+    fork: { t:185, prompt:'Unregistered signal detected on subspace channel 12.',
+      opts:['Ignore — continue patrol','Open channel 12'] }
+  },
+  bsg: {
+    color:  '#7a8e58',
+    title:  'COLONIAL FLEET — DRADIS NET',
+    meta:   'BATTLESTAR GALACTICA · 2112.7 MHz',
+    tx: [
+      { t:  8, src:'DRADIS',   msg:'Contact. Bearing 221 carom 14. Range eighty thousand klicks. Transponder Colonial shuttle.' },
+      { t: 22, src:'CIC',      msg:'All hands — Condition Two. This is not a drill.' },
+      { t: 44, src:'STARBUCK', msg:'Galactica, Starbuck. Three clicks out. Request landing clearance, port bay.' },
+      { t: 66, src:'LSO',      msg:'Starbuck, cleared for port landing bay. Deck crew standing by.' },
+      { t: 92, src:'ADAMA',    msg:'Find our people. Bring them home. That is all.' },
+      { t:118, src:'DRADIS',   msg:'DRADIS clear. Forty-seven souls aboard. Supplies nominal. Jump coordinates locked.' },
+      { t:150, src:'TYROL',    msg:'Deck crew — secure vipers. No EVA activity until further notice.' },
+      { t:188, src:'SOLAN',    msg:'All of this has happened before. All of this will happen again. The signal will find you. End log.' },
+      { t:240, src:'CIC',      msg:'Jump in four minutes. All departments confirm readiness.' },
+    ],
+    fork: { t:170, prompt:'New DRADIS contact. Bearing 041 carom 08. Unidentified.',
+      opts:['Designate civilian — stand down','Sound Condition One'] }
+  },
+  fw: {
+    color:  '#b85530',
+    title:  'SERENITY — BORDER RELAY',
+    meta:   'INDEPENDENT FREIGHT · 554.9 MHz',
+    tx: [
+      { t:  8, src:'SERENITY',   msg:'Persephone control — Serenity inbound. Cargo is legitimate. Just ask Mal.' },
+      { t: 24, src:'PERSEPHONE', msg:'Serenity, hold at high anchor. Alliance inspection team active on pad seven.' },
+      { t: 46, src:'WASH',       msg:'Well that is not good. That is very, very not good.' },
+      { t: 63, src:'MAL',        msg:'Wash, keep her steady. Zoe — with me. We are taking the long way down.' },
+      { t: 90, src:'SOLAN',      msg:'Out here between the stars there is only the breath and the distance. Both are the same thing.' },
+      { t:120, src:'SERENITY',   msg:'Cargo offloaded. Credits transferred. Next heading: Whitefall. Nothing to see here.' },
+      { t:158, src:'RELAY-7N',   msg:'Border relay seven-niner standing by. Traffic nominal. Safe flight.' },
+      { t:200, src:'BOOK',       msg:'I have a bad feeling about that ship. The kind of feeling a man of faith cannot ignore.' },
+      { t:248, src:'SOLAN',      msg:'The river does not push. It does not resist. It finds the way. So do we.' },
+    ],
+    fork: { t:175, prompt:'Alliance patrol vessel on intercept heading.',
+      opts:["Maintain course — we're legitimate",'Hard burn for atmo'] }
+  }
+};
+
+/* ── State ── */
+let ch        = 'alien';
+let playing   = false;
+let audioCtx  = null;
+let analyser  = null;
+let srcNode   = null;
+let timers    = [];
+let demoTimer = null;
+let demoTime  = 0;
+let forkShown = false;
+let raf       = null;
+
+const audio   = document.getElementById('audio');
+const canvas  = document.getElementById('waveform');
+const cx      = canvas.getContext('2d');
+
+/* ── Canvas sizing ── */
+function resize() {
+  const r = window.devicePixelRatio || 1;
+  canvas.width  = canvas.offsetWidth  * r;
+  canvas.height = canvas.offsetHeight * r;
+  cx.scale(r, r);
+}
+window.addEventListener('resize', resize);
+resize();
+
+/* ── Waveform: idle ── */
+let idlePhase = 0;
+function drawIdle() {
+  const w = canvas.offsetWidth, h = canvas.offsetHeight;
+  cx.clearRect(0, 0, w, h);
+  cx.strokeStyle = CH[ch].color + '35';
+  cx.lineWidth   = 1;
+  cx.beginPath();
+  for (let x = 0; x < w; x++) {
+    const noise = (Math.random() - 0.5) * 2.5;
+    const y = h/2 + noise + Math.sin((x/w) * Math.PI * 6 + idlePhase) * 1.5;
+    x === 0 ? cx.moveTo(x, y) : cx.lineTo(x, y);
+  }
+  cx.stroke();
+  idlePhase += 0.018;
+}
+
+/* ── Waveform: live (analyser or synthetic) ── */
+let synthPhase = 0;
+let synthData  = null;
+
+function drawLive() {
+  const w = canvas.offsetWidth, h = canvas.offsetHeight;
+  cx.clearRect(0, 0, w, h);
+
+  let data;
+  if (analyser) {
+    const buf = new Uint8Array(analyser.frequencyBinCount);
+    analyser.getByteTimeDomainData(buf);
+    data = buf;
+  } else {
+    // synthetic waveform for demo mode
+    if (!synthData) synthData = new Uint8Array(512);
+    for (let i = 0; i < synthData.length; i++) {
+      synthData[i] = 128
+        + Math.sin(i * 0.08 + synthPhase) * 18
+        + Math.sin(i * 0.23 + synthPhase * 1.3) * 8
+        + (Math.random() - 0.5) * 6;
+    }
+    synthPhase += 0.04;
+    data = synthData;
+  }
+
+  const color = CH[ch].color;
+
+  // mid-line
+  cx.strokeStyle = color + '12';
+  cx.lineWidth = 0.5;
+  cx.beginPath(); cx.moveTo(0, h/2); cx.lineTo(w, h/2); cx.stroke();
+
+  // waveform glow
+  cx.shadowColor = color;
+  cx.shadowBlur  = 10;
+  cx.strokeStyle = color + 'bb';
+  cx.lineWidth   = 1.5;
+  cx.beginPath();
+  const sw = w / data.length;
+  for (let i = 0; i < data.length; i++) {
+    const y = (data[i] / 128.0) * h / 2;
+    i === 0 ? cx.moveTo(0, y) : cx.lineTo(i * sw, y);
+  }
+  cx.stroke();
+  cx.shadowBlur = 0;
+}
+
+/* ── Animation loop ── */
+function loop() {
+  if (!playing) { drawIdle(); raf = requestAnimationFrame(loop); return; }
+  drawLive();
+  raf = requestAnimationFrame(loop);
+}
+
+/* ── Audio init ── */
+function initAudio() {
+  if (audioCtx) return;
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  analyser  = audioCtx.createAnalyser();
+  analyser.fftSize = 2048;
+  srcNode   = audioCtx.createMediaElementSource(audio);
+  srcNode.connect(analyser);
+  analyser.connect(audioCtx.destination);
+}
+
+/* ── Toggle play ── */
+function togglePlay() {
+  if (!playing) {
+    initAudio();
+    audio.play().catch(() => startDemo());
+    playing = true;
+    document.getElementById('play-ico').innerHTML = '<rect x="4" y="3" width="3" height="10"/><rect x="9" y="3" width="3" height="10"/>';
+    document.getElementById('sig-txt').textContent = 'signal acquired';
+    document.getElementById('log-live').textContent = '● live';
+    document.getElementById('footer-r').textContent = CH[ch].meta;
+    document.getElementById('np-title').textContent = CH[ch].title;
+    document.getElementById('np-meta').textContent  = CH[ch].meta;
+    schedTx();
+  } else {
+    audio.pause();
+    clearDemo();
+    clearTx();
+    playing = false;
+    document.getElementById('play-ico').innerHTML = '<path d="M5 2.5 L13.5 8 L5 13.5 Z"/>';
+    document.getElementById('sig-txt').textContent = 'paused';
+    document.getElementById('log-live').textContent = '● paused';
+  }
+}
+
+/* ── Audio time updates ── */
+audio.addEventListener('timeupdate', () => {
+  if (!audio.duration) return;
+  const pct = (audio.currentTime / audio.duration) * 100;
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('ct').textContent = fmt(audio.currentTime);
+});
+
+function fmt(s) {
+  const m = Math.floor(s/60), sec = Math.floor(s%60);
+  return String(m).padStart(2,'0') + ':' + String(sec).padStart(2,'0');
+}
+
+function seek(e) {
+  if (!audio.duration) return;
+  const r = e.currentTarget.getBoundingClientRect();
+  audio.currentTime = ((e.clientX - r.left) / r.width) * audio.duration;
+  clearTx(); clearLog(); forkShown = false; schedTx();
+}
+
+function setVol(v) { audio.volume = parseFloat(v); }
+
+/* ── Channel select ── */
+function selectCh(id, el) {
+  ch = id;
+  document.querySelectorAll('.ch-tile').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  const color = CH[id].color;
+  document.documentElement.style.setProperty('--accent', color);
+  if (playing) {
+    document.getElementById('np-title').textContent = CH[id].title;
+    document.getElementById('np-meta').textContent  = CH[id].meta;
+    document.getElementById('footer-r').textContent = CH[id].meta;
+    clearTx(); clearLog(); forkShown = false; schedTx();
+  }
+}
+
+/* ── Log ── */
+function clearLog() { document.getElementById('log-body').innerHTML = ''; }
+
+function addEntry(src, msg, mira) {
+  const body  = document.getElementById('log-body');
+  const now   = audio.currentTime || demoTime || 0;
+  const div   = document.createElement('div');
+  div.className = 'log-entry' + (mira ? ' mira' : '');
+  div.innerHTML =
+    `<span class="le-ts">${fmt(now)} </span>` +
+    `<span class="le-src">${src}</span>` +
+    `<span class="le-msg">${msg}</span>`;
+  body.appendChild(div);
+  requestAnimationFrame(() => div.classList.add('in'));
+  body.scrollTop = body.scrollHeight;
+}
+
+function showFork(fork) {
+  if (forkShown) return; forkShown = true;
+  const body = document.getElementById('log-body');
+  const div  = document.createElement('div');
+  div.className = 'log-fork';
+  div.innerHTML =
+    `<div class="fork-lbl">— choose your path —</div>` +
+    fork.opts.map((o, i) =>
+      `<button class="fork-opt" onclick="pickFork(this,'${o}')">[${i+1}] ${o}</button>`
+    ).join('') +
+    `<div class="fork-note">or do nothing — transmission continues</div>`;
+  body.appendChild(div);
+  requestAnimationFrame(() => div.classList.add('in'));
+  body.scrollTop = body.scrollHeight;
+}
+
+function pickFork(btn, label) {
+  document.querySelectorAll('.log-fork').forEach(f => {
+    f.style.opacity = '0.3';
+    f.style.pointerEvents = 'none';
+  });
+  addEntry('SYS', 'Path acknowledged: ' + label);
+}
+
+/* ── Schedule transmissions ── */
+function clearTx() { timers.forEach(t => clearTimeout(t)); timers = []; }
+
+function schedTx() {
+  const data = CH[ch];
+  const off  = audio.currentTime || demoTime || 0;
+  data.tx.forEach(tx => {
+    const delay = Math.max(0, (tx.t - off) * 1000);
+    const t = setTimeout(() => addEntry(tx.src, tx.msg, tx.mira), delay);
+    timers.push(t);
+  });
+  if (data.fork) {
+    const delay = Math.max(0, (data.fork.t - off) * 1000);
+    const t = setTimeout(() => showFork(data.fork), delay);
+    timers.push(t);
+  }
+}
+
+/* ── Demo mode (no audio file) ── */
+function startDemo() {
+  demoTime = 0;
+  analyser = null; // use synthetic waveform
+  demoTimer = setInterval(() => {
+    if (!playing) { clearInterval(demoTimer); return; }
+    demoTime += 0.5;
+    const pct = (demoTime / 600) * 100;
+    document.getElementById('prog-fill').style.width = Math.min(pct, 100) + '%';
+    document.getElementById('ct').textContent = fmt(demoTime);
+  }, 500);
+  document.getElementById('np-meta').textContent = CH[ch].meta + ' · DEMO';
+}
+
+function clearDemo() {
+  if (demoTimer) { clearInterval(demoTimer); demoTimer = null; }
+}
+
+/* ── Start loop ── */
+// Ensure canvas has dimensions before first draw
+requestAnimationFrame(() => { resize(); loop(); });
+</script>
+</body>
+</html>
