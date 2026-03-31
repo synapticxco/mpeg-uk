@@ -4,6 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>DEEP RELAY — mpeg.uk</title>
+  <meta name="theme-color" content="#07070f">
+  <meta name="description" content="Ambient space radio for sleep. Four franchise channels — live transmissions from deep space.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Deep Relay">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
@@ -286,6 +293,39 @@
     }
     #footer-r { color: var(--text-dim); transition: color 0.3s; }
 
+    /* ── sleep timer ── */
+    .header-r { display: flex; align-items: center; gap: 16px; }
+    .sleep-btn {
+      display: flex; align-items: center; gap: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px; text-transform: uppercase;
+      letter-spacing: 0.12em; color: var(--text-dim);
+      cursor: pointer; user-select: none;
+      padding: 4px 0;
+      -webkit-tap-highlight-color: transparent;
+      transition: color 0.25s;
+    }
+    .sleep-btn:hover { color: var(--text); }
+    .sleep-btn.active { color: var(--accent); }
+    .sleep-ico { font-size: 11px; line-height: 1; }
+    .sleep-opts {
+      display: none; position: absolute; right: 0; top: calc(100% + 6px);
+      background: #0e0e1c; border: 1px solid var(--border);
+      border-radius: 3px; overflow: hidden; z-index: 100;
+    }
+    .sleep-opts.open { display: block; }
+    .sleep-opt {
+      display: block; width: 100%; padding: 9px 18px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px; text-transform: uppercase; letter-spacing: 0.12em;
+      color: var(--text-dim); background: transparent; border: none;
+      cursor: pointer; text-align: left; white-space: nowrap;
+      transition: color 0.2s, background 0.2s;
+    }
+    .sleep-opt:hover { color: var(--text-hi); background: rgba(255,255,255,0.04); }
+    .sleep-opt.chosen { color: var(--accent); }
+    .sleep-wrap { position: relative; }
+
     /* ── channel colour vars ── */
     [data-ch="alien"] { --tile-color: var(--ch-alien); }
     [data-ch="trek"]  { --tile-color: var(--ch-trek);  }
@@ -389,6 +429,10 @@
 
       /* Footer — hidden on mobile */
       footer { display: none; }
+
+      /* Sleep button — slightly larger touch target on mobile */
+      .sleep-btn { font-size: 10px; gap: 5px; }
+      .sleep-opts { right: -16px; }
     }
   </style>
 </head>
@@ -401,9 +445,23 @@
       <div class="logo-name">Deep Relay</div>
       <div class="logo-domain">mpeg.uk</div>
     </div>
-    <div class="signal-pill">
-      <div class="signal-dot"></div>
-      <span id="sig-txt">standby</span>
+    <div class="header-r">
+      <div class="sleep-wrap">
+        <div class="sleep-btn" id="sleep-btn" onclick="toggleSleepMenu()" title="Sleep timer">
+          <span class="sleep-ico">☽</span>
+          <span id="sleep-lbl">sleep</span>
+        </div>
+        <div class="sleep-opts" id="sleep-opts">
+          <button class="sleep-opt chosen" onclick="setSleep(0)">Off</button>
+          <button class="sleep-opt" onclick="setSleep(30)">30 min</button>
+          <button class="sleep-opt" onclick="setSleep(60)">60 min</button>
+          <button class="sleep-opt" onclick="setSleep(90)">90 min</button>
+        </div>
+      </div>
+      <div class="signal-pill">
+        <div class="signal-dot"></div>
+        <span id="sig-txt">standby</span>
+      </div>
     </div>
   </header>
 
@@ -695,10 +753,18 @@ function togglePlay() {
     document.getElementById('np-title').textContent = CH[ch].title;
     document.getElementById('np-meta').textContent  = CH[ch].meta;
     resetSync();
+    updateMediaSession();
   } else {
     audio.pause();
     clearDemo();
     playing = false;
+    // Restore volume if sleep timer had faded it
+    if (sleepRemaining > 0) {
+      audio.volume = sleepBaseVol;
+      clearSleepTimer();
+      document.querySelectorAll('.sleep-opt').forEach((b,i) => b.classList.toggle('chosen', i===0));
+      updateSleepUI(0);
+    }
     document.getElementById('play-ico').innerHTML =
       '<path d="M5.5 3L15 9 5.5 15Z"/>';
     document.getElementById('sig-txt').textContent = 'paused';
@@ -761,6 +827,7 @@ function selectCh(id, el) {
     document.getElementById('np-title').textContent = CH[id].title;
     document.getElementById('np-meta').textContent  = CH[id].meta;
     resetSync();
+    updateMediaSession();
   }
 }
 
@@ -837,6 +904,112 @@ function startDemo() {
 
 function clearDemo() {
   if (demoTimer) { clearInterval(demoTimer); demoTimer = null; }
+}
+
+/* ── Sleep timer ── */
+const FADE_SECS    = 90;    // fade-out duration in seconds
+let sleepRemaining = 0;     // seconds remaining (0 = off)
+let sleepInterval  = null;
+let sleepBaseVol   = 0.85;  // volume before fade started
+let sleepMenuOpen  = false;
+
+function toggleSleepMenu() {
+  sleepMenuOpen = !sleepMenuOpen;
+  document.getElementById('sleep-opts').classList.toggle('open', sleepMenuOpen);
+  if (sleepMenuOpen) {
+    // Close on outside click
+    setTimeout(() => document.addEventListener('click', closeSleepMenu, { once: true }), 10);
+  }
+}
+
+function closeSleepMenu() {
+  sleepMenuOpen = false;
+  document.getElementById('sleep-opts').classList.remove('open');
+}
+
+function setSleep(minutes) {
+  closeSleepMenu();
+  clearSleepTimer();
+
+  // Update chosen highlight
+  document.querySelectorAll('.sleep-opt').forEach((b, i) => {
+    b.classList.toggle('chosen', i === [0,30,60,90].indexOf(minutes));
+  });
+
+  if (minutes === 0) {
+    // Restore full volume if we were mid-fade
+    audio.volume = sleepBaseVol;
+    updateSleepUI(0);
+    return;
+  }
+
+  sleepRemaining = minutes * 60;
+  sleepBaseVol   = audio.volume || 0.85;
+  sleepInterval  = setInterval(tickSleep, 1000);
+  updateSleepUI(sleepRemaining);
+}
+
+function tickSleep() {
+  if (!playing) return;   // pause the countdown while audio is paused
+  sleepRemaining--;
+
+  if (sleepRemaining <= 0) {
+    // Done — fade complete, stop playback
+    audio.volume = sleepBaseVol;
+    if (playing) togglePlay();
+    clearSleepTimer();
+    document.querySelectorAll('.sleep-opt').forEach((b,i) => b.classList.toggle('chosen', i===0));
+    updateSleepUI(0);
+    return;
+  }
+
+  // Fade volume during the final FADE_SECS seconds
+  if (sleepRemaining <= FADE_SECS) {
+    audio.volume = sleepBaseVol * (sleepRemaining / FADE_SECS);
+  }
+
+  updateSleepUI(sleepRemaining);
+}
+
+function clearSleepTimer() {
+  if (sleepInterval) { clearInterval(sleepInterval); sleepInterval = null; }
+  sleepRemaining = 0;
+}
+
+function updateSleepUI(secs) {
+  const btn = document.getElementById('sleep-btn');
+  const lbl = document.getElementById('sleep-lbl');
+  if (secs > 0) {
+    btn.classList.add('active');
+    lbl.textContent = fmt(secs);
+  } else {
+    btn.classList.remove('active');
+    lbl.textContent = 'sleep';
+  }
+}
+
+/* ── Media Session (lock screen controls) ── */
+function updateMediaSession() {
+  if (!('mediaSession' in navigator)) return;
+  navigator.mediaSession.metadata = new MediaMetadata({
+    title:  CH[ch].title,
+    artist: 'Deep Relay',
+    album:  'mpeg.uk',
+    artwork: [
+      { src: 'icon-192.png', sizes: '192x192', type: 'image/png' },
+      { src: 'icon-512.png', sizes: '512x512', type: 'image/png' },
+    ],
+  });
+  navigator.mediaSession.setActionHandler('play',  () => { if (!playing) togglePlay(); });
+  navigator.mediaSession.setActionHandler('pause', () => { if  (playing) togglePlay(); });
+  navigator.mediaSession.setActionHandler('stop',  () => { if  (playing) togglePlay(); });
+}
+
+/* ── Service worker ── */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('service-worker.js').catch(() => {});
+  });
 }
 
 /* ── Start ── */
