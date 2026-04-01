@@ -763,23 +763,156 @@ const CH = {
     ],
   },
   archive: {
-    color: '#5aabbc', audioSrc: 'archive_pilot.mp3',
+    color: '#5aabbc',
     title: 'THE ARCHIVE — DEEP RELAY',
-    meta:  'NASA · ESA · REAL SPACE HISTORY · HELIOPAUSE CROSSING',
-    fork:  { t: 392, prompt: 'MIRA sub-channel active. Encoded sequence repeating. Pattern is non-random. Origin unresolved.',
-             opts: ['Maintain primary frequency', 'Tune to MIRA — investigate the pattern'] },
-    tx: [
-      { t: 6,   src:'VALE',   msg:'Acquisition of signal confirmed. Voyager 1, day 17,678. Signal strength nominal. One-way light time: 22 hours, 19 minutes.' },
-      { t: 30,  src:'VALE',   msg:'Juno, 50th orbit of Jupiter complete. Closest approach to Great Red Spot: 3,500 kilometres. Data downlink in progress.' },
-      { t: 47,  src:'VALE',   msg:'ISS, attitude control moment gyroscope number 2 approaching saturation. Initiating momentum dump. Attitude hold confirmed.' },
-      { t: 70,  src:'VALE',   msg:'OSIRIS-REx, sample return capsule separation confirmed. Re-entry in 4 hours. 70 grams of Bennu surface material onboard.' },
-      { t: 148, src:'SOLAN',  msg:'New Horizons reached Pluto after nine years of travel. In the photographs, Pluto has a heart. A bright nitrogen ice plain shaped like a heart.' },
-      { t: 184, src:'VALE',   msg:'Magellan, aerobraking phase 3. Atmospheric drag detected. Orbit circularized to 250 by 8,458 kilometres. Synthetic aperture radar nominal.' },
-      { t: 266, src:'SOLAN',  msg:'Pioneer 10 is somewhere beyond 100 astronomical units from the Sun. It carries a plaque. Two human figures. Our location. A greeting.' },
-      { t: 300, src:'VALE',   msg:'Voyager 2, plasma density increase confirmed. Heliopause crossing. November 5, 2018. Second object of human origin to enter interstellar space.' },
-      { t: 386, src:'SOLAN',  msg:'The Wow signal lasted 72 seconds. It came from the direction of Sagittarius. It was at the hydrogen line — the frequency we said any intelligence would use.' },
-      { t: 420, src:'VALE',   msg:'Mars Observer. Scheduled acquisition time has passed. No signal. All Deep Space Network stations are monitoring. Silence.' },
-      { t: 485, src:'ROURKE', msg:'SETI Institute, observation log, August 15, 1977. Signal duration: 72 seconds. Frequency: 1,420 megahertz. Designation: 6EQUJ5. Source unidentified.' },
+    meta:  'NASA · ESA · REAL SPACE HISTORY',
+    /* Runtime fields — populated by pickArchiveSession() before each play */
+    audioSrc: 'archive_pilot.mp3',
+    fork: null,
+    tx: [],
+    /* ── Session library ── */
+    _sessions: [
+      {
+        id: 'pilot', audioSrc: 'archive_pilot.mp3',
+        theme: 'HELIOPAUSE CROSSING',
+        fork: { t: 410, prompt: 'MIRA sub-channel active. Encoded sequence repeating. Pattern is non-random. Origin unresolved.',
+                opts: ['Maintain primary frequency', 'Tune to MIRA — investigate the pattern'] },
+        tx: [
+          { t:   6, src:'VALE',   msg:'Acquisition of signal confirmed. Voyager 1, day 17,678. Signal strength nominal. One-way light time: 22 hours, 19 minutes.' },
+          { t:  25, src:'VALE',   msg:'Juno, 50th orbit of Jupiter complete. Closest approach to Great Red Spot: 3,500 kilometres. Data downlink in progress.' },
+          { t:  50, src:'VALE',   msg:'ISS, attitude control moment gyroscope number 2 approaching saturation. Initiating momentum dump. Attitude hold confirmed.' },
+          { t:  69, src:'VALE',   msg:'OSIRIS-REx, sample return capsule separation confirmed. Re-entry in 4 hours. 70 grams of Bennu surface material onboard.' },
+          { t: 147, src:'SOLAN',  msg:'New Horizons reached Pluto after nine years of travel. In the photographs, Pluto has a heart. A bright nitrogen ice plain shaped like a heart.' },
+          { t: 183, src:'VALE',   msg:'Magellan, aerobraking phase 3. Atmospheric drag detected. Orbit circularized to 250 by 8,458 kilometres. Synthetic aperture radar nominal.' },
+          { t: 209, src:'VALE',   msg:'Galileo orbiter, Europa flyby complete. Magnetometer anomaly detected. Pattern consistent with a subsurface conducting layer. Possible ocean confirmed.' },
+          { t: 261, src:'SOLAN',  msg:'Pioneer 10 is somewhere beyond 100 astronomical units from the Sun. It carries a plaque. Two human figures. Our location. A greeting.' },
+          { t: 299, src:'VALE',   msg:'Voyager 2, plasma density increase confirmed. Heliopause crossing. November 5, 2018. Second object of human origin to enter interstellar space.' },
+          { t: 386, src:'SOLAN',  msg:'The Wow signal lasted 72 seconds. It came from the direction of Sagittarius. It was at the hydrogen line — the frequency we said any intelligence would use.' },
+          { t: 422, src:'VALE',   msg:'Mars Observer. Scheduled acquisition time has passed. No signal. All Deep Space Network stations are monitoring. Silence.' },
+          { t: 485, src:'ROURKE', msg:'SETI Institute, observation log, August 15, 1977. Signal duration: 72 seconds. Frequency: 1,420 megahertz. Designation: 6EQUJ5. Source unidentified.' },
+        ],
+      },
+      {
+        id: 'cassini', audioSrc: 'archive_cassini.mp3',
+        theme: 'CASSINI — GRAND FINALE',
+        fork: { t: 410, prompt: 'MIRA sub-channel active. Encoded sequence repeating. Pattern is non-random. Origin unresolved.',
+                opts: ['Maintain primary frequency', 'Tune to MIRA — investigate the pattern'] },
+        tx: [
+          { t:   6, src:'VALE',   msg:'Cassini, Grand Finale orbit number 22. Ring gap crossing nominal. Atmosphere samples nominal. Telemetry strong. Next periapsis: September 15.' },
+          { t:  31, src:'VALE',   msg:'New Horizons, closest approach plus 3 minutes. Pluto surface temperature: minus 229 degrees Celsius. Telemetry nominal. Recording to buffer.' },
+          { t:  49, src:'VALE',   msg:'Magellan, aerobraking phase 3. Atmospheric drag detected. Orbit circularized to 250 by 8,458 kilometres. Synthetic aperture radar nominal.' },
+          { t:  72, src:'VALE',   msg:'OSIRIS-REx, sample return capsule separation confirmed. Re-entry in 4 hours. 70 grams of Bennu surface material aboard.' },
+          { t: 147, src:'SOLAN',  msg:"Ed White concluded the first American spacewalk with these words: I'm coming back in. And it's the saddest moment of my life. He was floating above the Pacific. The tether was 8 metres. He did not want to come back in." },
+          { t: 183, src:'VALE',   msg:'Huygens probe, Titan surface confirmed. Temperature: 94 Kelvin. Surface: solid. Possible drainage channels visible. Methane atmosphere: 98 percent.' },
+          { t: 221, src:'VALE',   msg:'Juno, 50th orbit of Jupiter complete. Closest approach to Great Red Spot: 3,500 kilometres. Data downlink in progress.' },
+          { t: 260, src:'SOLAN',  msg:"Cassini spent 13 years at Saturn. It discovered six new moons. It found liquid methane lakes on Titan. It found evidence of a warm ocean beneath Enceladus. At the end, they flew it into Saturn deliberately, so it wouldn't contaminate the moons with Earth microbes. It died clean." },
+          { t: 297, src:'VALE',   msg:'Carrier wave is gone. Station is blind. We are standing by on all bands. Continue passive monitoring.' },
+          { t: 387, src:'SOLAN',  msg:'Venera 9 landed on Venus on October 22, 1975. The surface pressure was 90 atmospheres. The temperature was 730 Kelvin. The probe survived for 53 minutes. It returned one photograph — the first from the surface of another planet. Then the heat killed it.' },
+          { t: 425, src:'VALE',   msg:'Apollo 17. Final surface EVA complete. Ascent engine ignition in T minus 4 minutes. The last human footprints are in the dust of Taurus-Littrow.' },
+          { t: 445, src:'VALE',   msg:'Cassini Grand Finale. Atmosphere entry confirmed. Signal lost 11:55 UTC, September 15, 2017. Last transmission received.' },
+          { t: 486, src:'VALE',   msg:'Arecibo, 1974. Transmission complete. 1,679 bits. Aimed at M13. Power: 450 kilowatts. The message is on its way. It will arrive in 25,000 years.' },
+        ],
+      },
+      {
+        id: 'voyager', audioSrc: 'archive_voyager.mp3',
+        theme: 'THE LONG WAKE',
+        fork: { t: 410, prompt: 'MIRA sub-channel active. Encoded sequence repeating. Pattern is non-random. Origin unresolved.',
+                opts: ['Maintain primary frequency', 'Tune to MIRA — investigate the pattern'] },
+        tx: [
+          { t:   6, src:'VALE',   msg:'Pioneer 10, last confirmed contact: January 22, 2003. Signal too weak to acquire. Distance: 80 AU. Status: drifting.' },
+          { t:  28, src:'VALE',   msg:'Parker Solar Probe, perihelion crossing confirmed. Distance from Sun: 0.046 AU. Speed: 586,864 kilometres per hour.' },
+          { t:  49, src:'VALE',   msg:'Viking 1, Chryse Planitia. Biology experiment result: positive gas evolution. Analysis inconclusive. Chemistry team is reviewing. No life confirmed.' },
+          { t:  70, src:'VALE',   msg:'Expected loss of signal as vehicle occults the planet. We will see them on the other side. Monitoring all frequencies.' },
+          { t: 158, src:'SOLAN',  msg:'New Horizons reached Pluto after nine years of travel. In the photographs, Pluto has a heart. A bright nitrogen ice plain shaped like a heart, 1,000 kilometres across. Nobody knew it was there. Scientists who had spent their careers working toward that flyby were weeping in mission control.' },
+          { t: 194, src:'VALE',   msg:'New Horizons, data playback complete. Total downlinked: 6.25 gigabytes from Pluto flyby. Transmission time elapsed: 16 months. Image archive: full.' },
+          { t: 267, src:'SOLAN',  msg:'We have been sending signals for 100 years. Radio waves travel at the speed of light. That means the edge of our first transmissions is a sphere 100 light-years across, expanding at the speed of light. Inside that sphere, anyone listening hears us. Outside it, we do not exist yet.' },
+          { t: 304, src:'VALE',   msg:'Arecibo, 1974. Transmission complete. 1,679 bits. Aimed at M13. Power: 450 kilowatts. The message is on its way. It will arrive in 25,000 years.' },
+          { t: 388, src:'SOLAN',  msg:'In 1977, someone pressed a button and the Voyagers lifted off. The people in that room are old now, or gone. The spacecraft they launched are the fastest objects our species has ever made. They are still accelerating, very slightly, from the momentum of a button pressed 47 years ago.' },
+          { t: 425, src:'VALE',   msg:'Viking 1, November 11, 1982. Final transmission received. After 6 years, 116 days on the surface of Mars. Carrier wave is gone. Lander is silent.' },
+          { t: 445, src:'VALE',   msg:'Pioneer 11, last contact: 1995. RTG output insufficient to maintain link. Spacecraft is now beyond antenna boresight. It is gone.' },
+          { t: 486, src:'ROURKE', msg:'SETI Institute, observation log, August 15, 1977. Signal duration: 72 seconds. Frequency: 1,420 megahertz. Designation: Wow signal. No repeat detection.' },
+        ],
+      },
+      {
+        id: 'apollo', audioSrc: 'archive_apollo.mp3',
+        theme: 'OCEAN OF STORMS',
+        fork: { t: 420, prompt: 'MIRA sub-channel active. Encoded sequence repeating. Pattern is non-random. Origin unresolved.',
+                opts: ['Maintain primary frequency', 'Tune to MIRA — investigate the pattern'] },
+        tx: [
+          { t:   6, src:'VALE',   msg:'Apollo 11, Houston. Sequence is go. Program alarm 1202 acknowledged. Guidance computer is in overload. You are go to continue powered descent.' },
+          { t:  26, src:'VALE',   msg:'Cassini, attitude hold confirmed. Ring plane crossing in 14 minutes. All systems nominal.' },
+          { t:  40, src:'VALE',   msg:'Apollo 13, Houston. Entry blackout expected at 142:40. We will attempt radio contact at 142:43. All tracking stations standing by.' },
+          { t:  64, src:'VALE',   msg:'New Horizons, closest approach plus 3 minutes. Pluto surface temperature: minus 229 degrees Celsius. Telemetry nominal. Recording to buffer.' },
+          { t:  89, src:'VALE',   msg:'Voyager 2, Uranus closest approach. Magnetic field tilted 60 degrees from rotation axis. Rings detected. 10 new moons. Downlink begins in 2 hours.' },
+          { t: 147, src:'SOLAN',  msg:"Apollo 13's re-entry blackout was supposed to last 3 minutes. It lasted 4 minutes and 27 seconds. For those 87 extra seconds, Mission Control did not know if the crew was alive. The flight director later said those were the longest seconds of his life." },
+          { t: 184, src:'VALE',   msg:'Galileo probe, Jupiter entry confirmed. Deceleration: 228 G. Temperature spike to 16,000 degrees. Telemetry nominal. Vehicle is vaporizing as intended.' },
+          { t: 210, src:'VALE',   msg:'Hubble Space Telescope, gyroscope 3 anomaly. Safe mode entry. Last observation archived. Awaiting command.' },
+          { t: 280, src:'SOLAN',  msg:"Cassini spent 13 years at Saturn. It discovered six new moons. It found liquid methane lakes on Titan. It found evidence of a warm ocean beneath Enceladus. At the end, they flew it into Saturn deliberately, so it wouldn't contaminate the moons with Earth microbes. It died clean." },
+          { t: 317, src:'VALE',   msg:'Apollo 8, Houston. Loss of signal as the vehicle passes behind the lunar far side. We will reacquire in 45 minutes. Standing by.' },
+          { t: 396, src:'SOLAN',  msg:'The Deep Space Network has three stations: Goldstone in California, Madrid in Spain, Canberra in Australia. They are spaced so that as Earth rotates, at least one antenna is always pointed at the sky. It has been that way since 1963. Someone is always listening.' },
+          { t: 432, src:'SOLAN',  msg:'The Voyager record has been traveling for 47 years. By the time it reaches another star, our species may be unrecognisable. Or absent.' },
+          { t: 449, src:'VALE',   msg:'Apollo 17. Final surface EVA complete. Ascent engine ignition in T minus 4 minutes. The last human footprints are in the dust of Taurus-Littrow.' },
+          { t: 484, src:'ROURKE', msg:'SETI Institute, observation log, August 15, 1977. Signal duration: 72 seconds. Frequency: 1,420 megahertz. Designation: Wow signal. No repeat detection.' },
+        ],
+      },
+      {
+        id: 'silence', audioSrc: 'archive_silence.mp3',
+        theme: 'THE GRAND SILENCE',
+        fork: { t: 415, prompt: 'MIRA sub-channel active. Encoded sequence repeating. Pattern is non-random. Origin unresolved.',
+                opts: ['Maintain primary frequency', 'Tune to MIRA — investigate the pattern'] },
+        tx: [
+          { t:   6, src:'VALE',   msg:'Mars Observer, propulsion system pressurization initiated. Transmitter powered down as per procedure. Scheduled reacquisition at 02:10 UTC. Standing by.' },
+          { t:  26, src:'VALE',   msg:'Bus voltage is nominal. Thermal loops stable. Auto-sequence initiated. All systems are nominal and we are go for the next phase.' },
+          { t:  46, src:'VALE',   msg:'Huygens probe, Titan surface confirmed. Temperature: 94 Kelvin. Surface: solid. Possible drainage channels visible. Methane atmosphere: 98 percent.' },
+          { t: 147, src:'SOLAN',  msg:'A message sent to Voyager 1 today takes over 22 hours to arrive. The spacecraft responds. That response takes another 22 hours to return. The conversation happens across 44 hours and 50 billion kilometres. And we are still having it.' },
+          { t: 182, src:'VALE',   msg:'Galileo orbiter, Europa flyby complete. Magnetometer anomaly detected. Pattern consistent with a subsurface conducting layer. Possible ocean confirmed.' },
+          { t: 269, src:'SOLAN',  msg:'The InSight lander recorded thousands of marsquakes. A dead world has a pulse. The seismometer proved it. Power faded through 2022 as dust buried the solar panels millimetre by millimetre. The last heartbeat came on December 21, 2022. The Martian dust settled, as it always does.' },
+          { t: 307, src:'ROURKE', msg:'SETI Institute, observation log, August 15, 1977. Signal duration: 72 seconds. Frequency: 1,420 megahertz. Designation: Wow signal. No repeat detection.' },
+          { t: 393, src:'SOLAN',  msg:"Cassini's last signal reached Earth 83 minutes after the spacecraft burned up. That 83-minute delay meant we were still receiving telemetry from something that had already ceased to exist. We watched it die, but late. That is what it means to listen from this distance." },
+          { t: 430, src:'VALE',   msg:'Viking 1, November 11, 1982. Final transmission received. After 6 years, 116 days on the surface of Mars. Carrier wave is gone. Lander is silent.' },
+          { t: 447, src:'VALE',   msg:'Carrier wave is gone. Station is blind. We are standing by on all bands. Continue passive monitoring.' },
+          { t: 485, src:'VALE',   msg:'Arecibo, 1974. Transmission complete. 1,679 bits. Aimed at M13. Power: 450 kilowatts. The message is on its way. It will arrive in 25,000 years.' },
+        ],
+      },
+      {
+        id: 'sol5111', audioSrc: 'archive_sol5111.mp3',
+        theme: 'SOL 5,111',
+        fork: { t: 420, prompt: 'MIRA sub-channel active. Encoded sequence repeating. Pattern is non-random. Origin unresolved.',
+                opts: ['Maintain primary frequency', 'Tune to MIRA — investigate the pattern'] },
+        tx: [
+          { t:   6, src:'VALE',   msg:'Opportunity battery charge: 23 percent. Solar array output: 0.0 watts. Dust opacity tau: 10.8. Standing by for uplink window.' },
+          { t:  28, src:'VALE',   msg:'Magellan, aerobraking phase 3. Atmospheric drag detected. Orbit circularized to 250 by 8,458 kilometres. Synthetic aperture radar nominal.' },
+          { t:  48, src:'VALE',   msg:'DSS-43, Canberra. Downlink confirmed on Voyager 1. Carrier power: minus 160 dBm. Signal-to-noise 2.1. We have acquisition.' },
+          { t: 150, src:'SOLAN',  msg:"Hubble's first images were blurry. The mirror had been ground to the wrong curve — off by 2.2 micrometres. They sent a crew up to fix it in orbit, four years after launch. When the repaired images came back, there was silence in the room, and then people started weeping. That's what the universe actually looks like." },
+          { t: 187, src:'VALE',   msg:'Voyager 2, plasma density increase confirmed. Heliopause crossing. November 5, 2018. Second object of human origin beyond the solar wind.' },
+          { t: 261, src:'SOLAN',  msg:"The RTG — radioisotope thermoelectric generator — converts heat from the decay of plutonium-238 into electricity. Its half-life is 87.7 years. The Voyagers' RTGs will still be generating power, faintly, in the 2020s. Plutonium has no sense of urgency. It simply continues." },
+          { t: 297, src:'VALE',   msg:'Galileo orbiter, Europa flyby complete. Magnetometer anomaly detected. Pattern consistent with a subsurface conducting layer. Possible ocean confirmed.' },
+          { t: 396, src:'SOLAN',  msg:'There are communication blackouts. When a spacecraft passes behind a planet, there is silence — minutes or hours where the signal cannot reach us. The operators wait. They monitor noise. Sometimes the spacecraft reappears. Sometimes it is the last silence before a longer one.' },
+          { t: 433, src:'VALE',   msg:'Loss of signal. Beagle 2. December 25, 2003. No further contact was ever received.' },
+          { t: 447, src:'VALE',   msg:'InSight. Dead bus. December 21, 2022. Final signal. Elysium Planitia. The seismometer is still.' },
+          { t: 483, src:'VALE',   msg:'Carrier wave is gone. Station is blind. We are standing by on all bands. Continue passive monitoring.' },
+        ],
+      },
+      {
+        id: 'arecibo', audioSrc: 'archive_arecibo.mp3',
+        theme: 'THE ANTENNA COLLAPSE',
+        fork: { t: 410, prompt: 'MIRA sub-channel active. Encoded sequence repeating. Pattern is non-random. Origin unresolved.',
+                opts: ['Maintain primary frequency', 'Tune to MIRA — investigate the pattern'] },
+        tx: [
+          { t:   6, src:'VALE',   msg:'Arecibo, 1974. Transmission complete. 1,679 bits. Aimed at M13. Power: 450 kilowatts. The message is on its way. It will arrive in 25,000 years.' },
+          { t:  27, src:'VALE',   msg:'DSS-14 Goldstone, switching to X-band downlink. Doppler residuals within limit. Maser is tuned and locked. Link margin: 1.4 decibels.' },
+          { t:  48, src:'VALE',   msg:'Voyager 2, Uranus closest approach. Magnetic field tilted 60 degrees from rotation axis. Rings detected. 10 new moons. Downlink begins in 2 hours.' },
+          { t:  69, src:'VALE',   msg:'Acquisition of signal confirmed. Voyager 1, day 17,678. Signal strength nominal. One-way light time: 22 hours, 35 minutes.' },
+          { t: 158, src:'SOLAN',  msg:'In 1977, someone pressed a button and the Voyagers lifted off. The people in that room are old now, or gone. The spacecraft they launched are the fastest objects our species has ever made. They are still accelerating, very slightly, from the momentum of a button pressed 47 years ago.' },
+          { t: 195, src:'VALE',   msg:'Galileo orbiter, Europa flyby complete. Magnetometer anomaly detected. Pattern consistent with a subsurface conducting layer. Possible ocean confirmed.' },
+          { t: 275, src:'SOLAN',  msg:'We have been sending signals for 100 years. Radio waves travel at the speed of light. That means the edge of our first transmissions is a sphere 100 light-years across, expanding at the speed of light. Inside that sphere, anyone listening hears us. Outside it, we do not exist yet.' },
+          { t: 312, src:'VALE',   msg:'Carrier wave is gone. Station is blind. We are standing by on all bands. Continue passive monitoring.' },
+          { t: 388, src:'SOLAN',  msg:'The Arecibo telescope collapsed in 2020. The dish fell into itself. In 1974 it broadcast the most powerful intentional radio signal ever transmitted from Earth — a 3-minute message aimed at a star cluster 25,000 light-years away. We will not receive a reply for 50,000 years, if there is one.' },
+          { t: 437, src:'VALE',   msg:'Cassini Grand Finale. Atmosphere entry confirmed. Signal lost 11:55 UTC, September 15, 2017. Last transmission received.' },
+          { t: 445, src:'VALE',   msg:'Arecibo, December 1, 2020. Auxiliary cable failure. Platform descent imminent. Evacuate the site. Final observations complete.' },
+          { t: 485, src:'ROURKE', msg:'SETI Institute, observation log, August 15, 1977. Signal duration: 72 seconds. Frequency: 1,420 megahertz. Designation: Wow signal. No repeat detection.' },
+        ],
+      },
     ],
   },
 };
@@ -1000,6 +1133,7 @@ function togglePlay() {
   if (!playing) {
     initAudio();
     startAmbient(ambType);   /* start ambient layer */
+    if (ch === 'archive') pickArchiveSession();
     audio.src = CH[ch].audioSrc;
     audio.load();
     audio.play().catch(() => startDemo());
@@ -1057,7 +1191,13 @@ audio.addEventListener('ended', () => {
     ambGainNode.gain.setTargetAtTime(ambVolume * 0.6, audioCtx.currentTime, 1.5);
   }
   setTimeout(() => {
-    audio.currentTime = 0;
+    if (ch === 'archive') {
+      pickArchiveSession();
+      audio.src = CH.archive.audioSrc;
+      audio.load();
+    } else {
+      audio.currentTime = 0;
+    }
     audio.play().catch(() => {});
     resetSync();
     if (ambGainNode) {
@@ -1080,6 +1220,23 @@ function seek(e) {
 
 function setVol(v) { audio.volume = parseFloat(v); }
 
+/* ── Archive session picker ── */
+let _archiveLastId = null;
+function pickArchiveSession() {
+  const sessions = CH.archive._sessions;
+  if (!sessions || !sessions.length) return;
+  /* Avoid repeating the same session when multiple are available */
+  let pool = sessions.length > 1
+    ? sessions.filter(s => s.id !== _archiveLastId)
+    : sessions;
+  const s = pool[Math.floor(Math.random() * pool.length)];
+  _archiveLastId      = s.id;
+  CH.archive.audioSrc = s.audioSrc;
+  CH.archive.tx       = s.tx;
+  CH.archive.fork     = s.fork;
+  CH.archive.meta     = 'NASA · ESA · REAL SPACE HISTORY · ' + s.theme;
+}
+
 /* ── Channel select ── */
 function selectCh(id, el) {
   ch = id;
@@ -1091,6 +1248,7 @@ function selectCh(id, el) {
   document.getElementById('footer-r').textContent = playing ? CH[id].meta  : 'signal not acquired';
   if (playing) {
     audio.pause();
+    if (id === 'archive') pickArchiveSession();
     audio.src = CH[id].audioSrc;
     audio.load();
     audio.play().catch(() => {});
