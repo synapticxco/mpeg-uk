@@ -631,7 +631,7 @@
   </main>
 
   <footer>
-    <span>deep relay v0.5 — bedtime + loop + ambient</span>
+    <span>deep relay v0.6 — amb slider fix</span>
     <span id="footer-r">signal not acquired</span>
   </footer>
 
@@ -976,8 +976,8 @@ function setAmb(type) {
 
 function setAmbVol(v) {
   ambVolume = parseFloat(v);
-  if (ambGainNode) {
-    ambGainNode.gain.setTargetAtTime(ambVolume, audioCtx.currentTime, 0.05);
+  if (ambGainNode && audioCtx) {
+    ambGainNode.gain.value = ambVolume;
   }
 }
 
