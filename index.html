@@ -235,8 +235,8 @@
     .log-body {
       flex: 1; overflow-y: auto;
       -ms-overflow-style: none; scrollbar-width: none;
-      mask-image: linear-gradient(to bottom, transparent 0%, black 7%, black 88%, transparent 100%);
-      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 7%, black 88%, transparent 100%);
+      mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 100%);
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 100%);
     }
     .log-body::-webkit-scrollbar { display: none; }
 
@@ -421,8 +421,8 @@
 
       .log-body {
         max-height: 170px;
-        mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 80%, transparent 100%);
-        -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 80%, transparent 100%);
+        mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 100%);
+        -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 100%);
       }
 
       .log-entry { font-size: 9.5px; padding: 5px 0; }
@@ -534,7 +534,7 @@
   </main>
 
   <footer>
-    <span>deep relay v0.2 — pilot + archive</span>
+    <span>deep relay v0.3 — fork fix + log scroll</span>
     <span id="footer-r">signal not acquired</span>
   </footer>
 
@@ -667,16 +667,18 @@ const CH = {
 };
 
 /* ── State ── */
-let ch        = 'alien';
-let playing   = false;
-let audioCtx  = null;
-let analyser  = null;
-let srcNode   = null;
-let demoTimer = null;
-let demoTime  = 0;
-let raf       = null;
-let txIndex   = 0;
-let forkDone  = false;
+let ch          = 'alien';
+let playing     = false;
+let audioCtx    = null;
+let analyser    = null;
+let srcNode     = null;
+let demoTimer   = null;
+let demoTime    = 0;
+let raf         = null;
+let txIndex     = 0;
+let forkDone    = false;
+let forkPending = false;  /* true while fork prompt is visible — pauses auto-scroll */
+let forkTimer   = null;   /* auto-dismiss after 45s */
 
 const audio  = document.getElementById('audio');
 const canvas = document.getElementById('waveform');
@@ -860,7 +862,9 @@ function selectCh(id, el) {
 /* ── Sync reset ── */
 function resetSync() {
   clearLog();
-  forkDone = false;
+  forkDone    = false;
+  forkPending = false;
+  clearTimeout(forkTimer);
   const t = audio.currentTime || demoTime || 0;
   txIndex = CH[ch].tx.findIndex(tx => tx.t > t);
   if (txIndex === -1) txIndex = CH[ch].tx.length;
@@ -881,30 +885,47 @@ function addEntry(src, msg, mira) {
     `<span class="le-msg">${msg}</span>`;
   body.appendChild(div);
   requestAnimationFrame(() => div.classList.add('in'));
-  body.scrollTop = body.scrollHeight;
+  /* Only auto-scroll while fork is not waiting for input */
+  if (!forkPending) body.scrollTop = body.scrollHeight;
 }
 
 function showFork(fork) {
   if (forkDone) return;
+  forkPending = true;
   const body = document.getElementById('log-body');
   const div  = document.createElement('div');
   div.className = 'log-fork';
+  /* Fix: closing single-quote added before ) to properly terminate string arg */
   div.innerHTML =
     `<div class="fork-lbl">— choose your path —</div>` +
     fork.opts.map((o,i) =>
-      `<button class="fork-opt" onclick="pickFork('${o.replace(/'/g,"\\'")})">[${i+1}] ${o}</button>`
+      `<button class="fork-opt" onclick="pickFork('${o.replace(/'/g,"\\'")}')">` +
+      `[${i+1}] ${o}</button>`
     ).join('') +
     `<div class="fork-note">or do nothing — transmission continues</div>`;
   body.appendChild(div);
-  requestAnimationFrame(() => div.classList.add('in'));
+  requestAnimationFrame(() => {
+    div.classList.add('in');
+    body.scrollTop = body.scrollHeight;
+  });
+  /* Auto-dismiss after 45s if no interaction */
+  forkTimer = setTimeout(() => dismissFork(), 45000);
+}
+
+function dismissFork() {
+  forkPending = false;
+  clearTimeout(forkTimer);
+  const body = document.getElementById('log-body');
   body.scrollTop = body.scrollHeight;
 }
 
 function pickFork(label) {
   document.querySelectorAll('.log-fork').forEach(f => {
     f.style.opacity = '0.3'; f.style.pointerEvents = 'none';
+    f.style.transition = 'opacity 0.4s';
   });
-  addEntry('SYS', 'Path acknowledged: ' + label);
+  dismissFork();
+  addEntry('SYS', 'Path selected — ' + label + '. Transmission continues.');
 }
 
 /* ── Demo mode ── */
