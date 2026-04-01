@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>DEEP RELAY — mpeg.uk</title>
+  <title>Deep Relay — Sleep radio from deep space</title>
   <meta name="theme-color" content="#07070f">
-  <meta name="description" content="Ambient space radio for sleep. Five channels — franchise fiction and real space history.">
+  <meta name="description" content="Real transmissions from the edge of the solar system. Ambient space radio for sleep.">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Deep Relay">
@@ -474,12 +474,21 @@
 
       .time-disp { font-size: 10px; }
 
-      /* Hide volume + ambient — use device volume on mobile */
+      /* Hide main volume slider — use device volume on mobile */
       .vol-wrap { display: none; }
-      .ambient-row { display: none; }
 
-      /* Channel tiles — 2×2 grid */
+      /* Ambient — show type buttons only; hide volume slider */
+      .ambient-row { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; padding-top: 10px; }
+      .amb-lbl-wrap { display: none; }
+      .amb-types { overflow-x: auto; -webkit-overflow-scrolling: touch; flex-wrap: nowrap; gap: 6px; padding-bottom: 4px; }
+      .amb-btn { padding: 6px 10px; font-size: 9px; }
+
+      /* Hide signal-pill text on mobile — reduce header crowding */
+      .signal-pill { display: none; }
+
+      /* Channel tiles — 2×2 grid + 5th full-width */
       .ch-tiles { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+      .ch-tiles .ch-tile:nth-child(5) { grid-column: span 2; }
 
       .ch-tile { padding: 14px 12px; }
       .ch-name { font-size: 11px; margin-bottom: 4px; }
@@ -513,6 +522,11 @@
       /* Sleep button — slightly larger touch target on mobile */
       .sleep-btn { font-size: 10px; gap: 5px; }
       .sleep-opts { right: -16px; }
+
+      /* Bedtime overlay — scale down for mobile */
+      .bm-channel { font-size: 16px; }
+      .bm-meta    { font-size: 8px; }
+      .bm-sleep   { font-size: 8px; }
     }
   </style>
 </head>
@@ -553,8 +567,8 @@
     <div class="player">
       <div class="now-playing">
         <div class="np-label">now broadcasting</div>
-        <div class="np-title" id="np-title">—</div>
-        <div class="np-meta" id="np-meta">select a channel · press play</div>
+        <div class="np-title" id="np-title">THE ARCHIVE — DEEP RELAY</div>
+        <div class="np-meta" id="np-meta">real space history · press play</div>
       </div>
 
       <div class="wave-wrap">
@@ -597,7 +611,7 @@
       <div class="channels">
         <div class="ch-lbl">channel select</div>
         <div class="ch-tiles">
-          <div class="ch-tile active" data-ch="alien" onclick="selectCh('alien',this)">
+          <div class="ch-tile" data-ch="alien" onclick="selectCh('alien',this)">
             <span class="ch-name">Alien / WY</span>
             <span class="ch-sub">LV-426 sector</span>
           </div>
@@ -613,7 +627,7 @@
             <span class="ch-name">Firefly</span>
             <span class="ch-sub">Border space</span>
           </div>
-          <div class="ch-tile" data-ch="archive" onclick="selectCh('archive',this)">
+          <div class="ch-tile active" data-ch="archive" onclick="selectCh('archive',this)">
             <span class="ch-name">The Archive</span>
             <span class="ch-sub">Real history</span>
           </div>
@@ -631,7 +645,7 @@
   </main>
 
   <footer>
-    <span>deep relay v0.6 — amb slider fix</span>
+    <span>deep relay v0.7</span>
     <span id="footer-r">signal not acquired</span>
   </footer>
 
@@ -639,8 +653,8 @@
 
 <!-- Bedtime mode overlay -->
 <div class="bedtime-overlay" id="bedtime-overlay">
-  <div class="bm-channel" id="bm-channel">Deep Relay</div>
-  <div class="bm-meta"    id="bm-meta">select a channel · press play</div>
+  <div class="bm-channel" id="bm-channel">THE ARCHIVE — DEEP RELAY</div>
+  <div class="bm-meta"    id="bm-meta">real space history · press play</div>
   <div class="bm-sleep"   id="bm-sleep"></div>
 </div>
 
@@ -771,7 +785,7 @@ const CH = {
 };
 
 /* ── State ── */
-let ch          = 'alien';
+let ch          = 'archive';
 let playing     = false;
 let audioCtx    = null;
 let analyser    = null;
@@ -1072,8 +1086,8 @@ function selectCh(id, el) {
   document.querySelectorAll('.ch-tile').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
   document.documentElement.style.setProperty('--accent', CH[id].color);
-  document.getElementById('np-title').textContent = playing ? CH[id].title : '—';
-  document.getElementById('np-meta').textContent  = playing ? CH[id].meta  : 'select a channel · press play';
+  document.getElementById('np-title').textContent = CH[id].title;
+  document.getElementById('np-meta').textContent  = playing ? CH[id].meta  : 'press play to begin';
   document.getElementById('footer-r').textContent = playing ? CH[id].meta  : 'signal not acquired';
   if (playing) {
     audio.pause();
@@ -1318,6 +1332,8 @@ if ('serviceWorker' in navigator) {
 }
 
 /* ── Start ── */
+/* Apply accent color for pre-selected channel on load */
+document.documentElement.style.setProperty('--accent', CH[ch].color);
 requestAnimationFrame(() => { resize(); loop(); });
 </script>
 </body>
