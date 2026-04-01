@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>DEEP RELAY — mpeg.uk</title>
   <meta name="theme-color" content="#07070f">
-  <meta name="description" content="Ambient space radio for sleep. Four franchise channels — live transmissions from deep space.">
+  <meta name="description" content="Ambient space radio for sleep. Five channels — franchise fiction and real space history.">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Deep Relay">
@@ -25,10 +25,11 @@
       --text-dim:  #404058;
       --text-hi:   #d0d0e8;
       --accent:    #e8a020;
-      --ch-alien:  #e8a020;
-      --ch-trek:   #4888cc;
-      --ch-bsg:    #7a8e58;
-      --ch-fw:     #b85530;
+      --ch-alien:   #e8a020;
+      --ch-trek:    #4888cc;
+      --ch-bsg:     #7a8e58;
+      --ch-fw:      #b85530;
+      --ch-archive: #5aabbc;
       --safe-bottom: env(safe-area-inset-bottom, 0px);
     }
 
@@ -190,7 +191,7 @@
       font-size: 9px; text-transform: uppercase;
       letter-spacing: 0.16em; color: var(--text-dim); margin-bottom: 12px;
     }
-    .ch-tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; }
+    .ch-tiles { display: grid; grid-template-columns: repeat(5, 1fr); gap: 7px; }
     .ch-tile {
       padding: 11px 10px; border: 1px solid var(--border);
       border-radius: 3px; cursor: pointer;
@@ -327,10 +328,11 @@
     .sleep-wrap { position: relative; }
 
     /* ── channel colour vars ── */
-    [data-ch="alien"] { --tile-color: var(--ch-alien); }
-    [data-ch="trek"]  { --tile-color: var(--ch-trek);  }
-    [data-ch="bsg"]   { --tile-color: var(--ch-bsg);   }
-    [data-ch="fw"]    { --tile-color: var(--ch-fw);    }
+    [data-ch="alien"]   { --tile-color: var(--ch-alien);   }
+    [data-ch="trek"]    { --tile-color: var(--ch-trek);    }
+    [data-ch="bsg"]     { --tile-color: var(--ch-bsg);     }
+    [data-ch="fw"]      { --tile-color: var(--ch-fw);      }
+    [data-ch="archive"] { --tile-color: var(--ch-archive); }
 
     /* ═══════════════════════════════════
        MOBILE LAYOUT (≤ 699px)
@@ -514,6 +516,10 @@
             <span class="ch-name">Firefly</span>
             <span class="ch-sub">Border space</span>
           </div>
+          <div class="ch-tile" data-ch="archive" onclick="selectCh('archive',this)">
+            <span class="ch-name">The Archive</span>
+            <span class="ch-sub">Real history</span>
+          </div>
         </div>
       </div>
     </div>
@@ -528,7 +534,7 @@
   </main>
 
   <footer>
-    <span>deep relay v0.1 — pilot</span>
+    <span>deep relay v0.2 — pilot + archive</span>
     <span id="footer-r">signal not acquired</span>
   </footer>
 
@@ -636,6 +642,26 @@ const CH = {
       { t: 522, src:'SOLAN',    msg:"There is a kind of freedom that only comes from having nothing to lose. The border worlds know this. Between the stars, far from any government, there is only the ship and the crew and the decision in front of you. That is not nothing. That is everything." },
       { t: 568, src:'RELAY-7N', msg:"Border Relay Seven-Niner. Traffic nominal. Whitefall reports clear skies. No Alliance in the outer rim for twelve hours. As quiet as it gets out here." },
       { t: 584, src:'MAL',      msg:"Cargo offloaded. Credits transferred. Nobody got shot. That's what passes for a good day out here. Serenity, out." },
+    ],
+  },
+  archive: {
+    color: '#5aabbc', audioSrc: 'archive_pilot.mp3',
+    title: 'THE ARCHIVE — DEEP RELAY',
+    meta:  'NASA · ESA · REAL SPACE HISTORY · HELIOPAUSE CROSSING',
+    fork:  { t: 392, prompt: 'MIRA sub-channel active. Encoded sequence repeating. Pattern is non-random. Origin unresolved.',
+             opts: ['Maintain primary frequency', 'Tune to MIRA — investigate the pattern'] },
+    tx: [
+      { t: 6,   src:'VALE',   msg:'Acquisition of signal confirmed. Voyager 1, day 17,678. Signal strength nominal. One-way light time: 22 hours, 19 minutes.' },
+      { t: 30,  src:'VALE',   msg:'Juno, 50th orbit of Jupiter complete. Closest approach to Great Red Spot: 3,500 kilometres. Data downlink in progress.' },
+      { t: 47,  src:'VALE',   msg:'ISS, attitude control moment gyroscope number 2 approaching saturation. Initiating momentum dump. Attitude hold confirmed.' },
+      { t: 70,  src:'VALE',   msg:'OSIRIS-REx, sample return capsule separation confirmed. Re-entry in 4 hours. 70 grams of Bennu surface material onboard.' },
+      { t: 148, src:'SOLAN',  msg:'New Horizons reached Pluto after nine years of travel. In the photographs, Pluto has a heart. A bright nitrogen ice plain shaped like a heart.' },
+      { t: 184, src:'VALE',   msg:'Magellan, aerobraking phase 3. Atmospheric drag detected. Orbit circularized to 250 by 8,458 kilometres. Synthetic aperture radar nominal.' },
+      { t: 266, src:'SOLAN',  msg:'Pioneer 10 is somewhere beyond 100 astronomical units from the Sun. It carries a plaque. Two human figures. Our location. A greeting.' },
+      { t: 300, src:'VALE',   msg:'Voyager 2, plasma density increase confirmed. Heliopause crossing. November 5, 2018. Second object of human origin to enter interstellar space.' },
+      { t: 386, src:'SOLAN',  msg:'The Wow signal lasted 72 seconds. It came from the direction of Sagittarius. It was at the hydrogen line — the frequency we said any intelligence would use.' },
+      { t: 420, src:'VALE',   msg:'Mars Observer. Scheduled acquisition time has passed. No signal. All Deep Space Network stations are monitoring. Silence.' },
+      { t: 485, src:'ROURKE', msg:'SETI Institute, observation log, August 15, 1977. Signal duration: 72 seconds. Frequency: 1,420 megahertz. Designation: 6EQUJ5. Source unidentified.' },
     ],
   },
 };
