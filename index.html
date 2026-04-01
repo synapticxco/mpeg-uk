@@ -184,6 +184,26 @@
       border-radius: 50%; background: var(--accent); transition: background 0.3s;
     }
 
+    /* ── ambient panel ── */
+    .ambient-row {
+      display: flex; align-items: center; gap: 16px;
+      margin-top: 14px; padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
+    .amb-lbl-wrap { display: flex; align-items: center; gap: 7px; flex-shrink: 0; }
+    .amb-types { display: flex; gap: 5px; flex-wrap: wrap; align-items: center; }
+    .amb-btn {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px; text-transform: uppercase; letter-spacing: 0.10em;
+      color: var(--text-dim); background: transparent;
+      border: 1px solid var(--border); border-radius: 2px;
+      padding: 4px 8px; cursor: pointer; white-space: nowrap;
+      transition: border-color 0.2s, color 0.2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .amb-btn:hover  { border-color: var(--text-dim); color: var(--text); }
+    .amb-btn.active { border-color: var(--accent); color: var(--accent); }
+
     /* channels */
     .channels { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border); }
     .ch-lbl {
@@ -327,6 +347,63 @@
     .sleep-opt.chosen { color: var(--accent); }
     .sleep-wrap { position: relative; }
 
+    /* ── bedtime mode ── */
+    .bedtime-btn {
+      display: flex; align-items: center; gap: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px; text-transform: uppercase;
+      letter-spacing: 0.12em; color: var(--text-dim);
+      cursor: pointer; user-select: none; padding: 4px 0;
+      -webkit-tap-highlight-color: transparent; transition: color 0.25s;
+    }
+    .bedtime-btn:hover { color: var(--text); }
+    .bedtime-btn.active { color: var(--accent); }
+    .bedtime-ico { font-size: 13px; line-height: 1; }
+
+    /* Elements that fade out in bedtime mode */
+    .log-panel,
+    .now-playing, .channels, .ambient-row, footer,
+    .time-disp, .progress-bar, .vol-wrap {
+      transition: opacity 0.7s ease;
+    }
+    body.bedtime .log-panel,
+    body.bedtime .now-playing,
+    body.bedtime .channels,
+    body.bedtime .ambient-row,
+    body.bedtime footer,
+    body.bedtime .time-disp,
+    body.bedtime .progress-bar,
+    body.bedtime .vol-wrap { opacity: 0; pointer-events: none; }
+
+    body.bedtime #waveform { opacity: 0.09; transition: opacity 0.9s ease; }
+
+    /* Bedtime overlay — centered above everything */
+    .bedtime-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      flex-direction: column; align-items: center; justify-content: center;
+      gap: 10px; z-index: 500; pointer-events: none;
+    }
+    body.bedtime .bedtime-overlay { display: flex; }
+    .bm-channel {
+      font-size: 22px; font-weight: 700; letter-spacing: 0.04em;
+      color: var(--accent); text-align: center; transition: color 0.3s;
+      opacity: 0; animation: bm-fade-in 1.2s ease 0.4s forwards;
+    }
+    .bm-meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px; color: var(--text-dim); text-align: center;
+      letter-spacing: 0.12em;
+      opacity: 0; animation: bm-fade-in 1.2s ease 0.7s forwards;
+    }
+    .bm-sleep {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px; color: var(--text-dim); text-align: center;
+      letter-spacing: 0.14em; margin-top: 6px; min-height: 14px;
+      opacity: 0; animation: bm-fade-in 1.2s ease 1.0s forwards;
+    }
+    @keyframes bm-fade-in { to { opacity: 1; } }
+
     /* ── channel colour vars ── */
     [data-ch="alien"]   { --tile-color: var(--ch-alien);   }
     [data-ch="trek"]    { --tile-color: var(--ch-trek);    }
@@ -397,8 +474,9 @@
 
       .time-disp { font-size: 10px; }
 
-      /* Hide volume — use device volume */
+      /* Hide volume + ambient — use device volume on mobile */
       .vol-wrap { display: none; }
+      .ambient-row { display: none; }
 
       /* Channel tiles — 2×2 grid */
       .ch-tiles { grid-template-columns: repeat(2, 1fr); gap: 8px; }
@@ -448,6 +526,10 @@
       <div class="logo-domain">mpeg.uk</div>
     </div>
     <div class="header-r">
+      <div class="bedtime-btn" id="bedtime-btn" onclick="toggleBedtime()" title="Bedtime mode — hide interface">
+        <span class="bedtime-ico">☾</span>
+        <span id="bedtime-lbl">rest</span>
+      </div>
       <div class="sleep-wrap">
         <div class="sleep-btn" id="sleep-btn" onclick="toggleSleepMenu()" title="Sleep timer">
           <span class="sleep-ico">☽</span>
@@ -497,6 +579,21 @@
         </div>
       </div>
 
+      <div class="ambient-row">
+        <div class="amb-lbl-wrap">
+          <span class="vol-lbl">amb</span>
+          <input type="range" id="amb-vol" min="0" max="1" step="0.01" value="0.32"
+                 oninput="setAmbVol(this.value)" title="Ambient volume">
+        </div>
+        <div class="amb-types" id="amb-types">
+          <button class="amb-btn active" data-amb="static" onclick="setAmb('static')">static</button>
+          <button class="amb-btn"        data-amb="hum"    onclick="setAmb('hum')">hum</button>
+          <button class="amb-btn"        data-amb="brown"  onclick="setAmb('brown')">brown</button>
+          <button class="amb-btn"        data-amb="pink"   onclick="setAmb('pink')">pink</button>
+          <button class="amb-btn"        data-amb="off"    onclick="setAmb('off')">off</button>
+        </div>
+      </div>
+
       <div class="channels">
         <div class="ch-lbl">channel select</div>
         <div class="ch-tiles">
@@ -534,10 +631,17 @@
   </main>
 
   <footer>
-    <span>deep relay v0.3 — fork fix + log scroll</span>
+    <span>deep relay v0.5 — bedtime + loop + ambient</span>
     <span id="footer-r">signal not acquired</span>
   </footer>
 
+</div>
+
+<!-- Bedtime mode overlay -->
+<div class="bedtime-overlay" id="bedtime-overlay">
+  <div class="bm-channel" id="bm-channel">Deep Relay</div>
+  <div class="bm-meta"    id="bm-meta">select a channel · press play</div>
+  <div class="bm-sleep"   id="bm-sleep"></div>
 </div>
 
 <audio id="audio" preload="auto">
@@ -680,6 +784,12 @@ let forkDone    = false;
 let forkPending = false;  /* true while fork prompt is visible — pauses auto-scroll */
 let forkTimer   = null;   /* auto-dismiss after 45s */
 
+/* ── Ambient state ── */
+let ambGainNode  = null;  /* master gain for ambient chain */
+let ambSrcNodes  = [];    /* active ambient source/osc nodes */
+let ambType      = 'static';
+let ambVolume    = 0.32;
+
 const audio  = document.getElementById('audio');
 const canvas = document.getElementById('waveform');
 const cx     = canvas.getContext('2d');
@@ -765,10 +875,117 @@ function initAudio() {
   analyser.connect(audioCtx.destination);
 }
 
+/* ── Ambient synthesizer ── */
+function initAmbientChain() {
+  if (ambGainNode) return;
+  ambGainNode = audioCtx.createGain();
+  ambGainNode.gain.value = ambVolume;
+  ambGainNode.connect(audioCtx.destination);
+}
+
+function stopAmbient() {
+  ambSrcNodes.forEach(n => { try { n.stop(); } catch(e) {} try { n.disconnect(); } catch(e) {} });
+  ambSrcNodes = [];
+}
+
+function startAmbient(type) {
+  if (!audioCtx || type === 'off') { stopAmbient(); return; }
+  stopAmbient();
+  initAmbientChain();
+  ambType = type;
+
+  if (type === 'hum') {
+    /* Deep drone: stacked sine oscillators with slow pitch LFO modulation */
+    [[45, 0.50, 0.040], [90, 0.22, 0.031], [135, 0.10, 0.022]].forEach(([freq, vol, lfoRate]) => {
+      const osc  = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      const lp   = audioCtx.createBiquadFilter();
+      const lfo  = audioCtx.createOscillator();
+      const lfoG = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq + (Math.random() - 0.5) * 0.4;
+      gain.gain.value = vol;
+      lp.type = 'lowpass'; lp.frequency.value = 220;
+      lfo.frequency.value = lfoRate; lfoG.gain.value = 0.25;
+      lfo.connect(lfoG); lfoG.connect(osc.frequency);
+      osc.connect(gain); gain.connect(lp); lp.connect(ambGainNode);
+      lfo.start(); osc.start();
+      ambSrcNodes.push(osc, lfo);
+    });
+  } else {
+    /* Buffer-based noise: pre-compute 30s and loop */
+    const sr  = audioCtx.sampleRate;
+    const len = sr * 30;
+    const buf = audioCtx.createBuffer(1, len, sr);
+    const d   = buf.getChannelData(0);
+
+    if (type === 'brown') {
+      let last = 0;
+      for (let i = 0; i < len; i++) {
+        const w = Math.random() * 2 - 1;
+        d[i] = (last + 0.02 * w) / 1.02;
+        last = d[i]; d[i] *= 3.5;
+      }
+    } else if (type === 'pink') {
+      let b0=0,b1=0,b2=0,b3=0,b4=0,b5=0,b6=0;
+      for (let i = 0; i < len; i++) {
+        const w = Math.random() * 2 - 1;
+        b0=0.99886*b0+w*0.0555179; b1=0.99332*b1+w*0.0750759;
+        b2=0.96900*b2+w*0.1538520; b3=0.86650*b3+w*0.3104856;
+        b4=0.55000*b4+w*0.5329522; b5=-0.7616*b5-w*0.0168980;
+        d[i] = (b0+b1+b2+b3+b4+b5+b6+w*0.5362) * 0.11;
+        b6 = w * 0.115926;
+      }
+    } else {
+      /* static: white noise */
+      for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+    }
+
+    const src = audioCtx.createBufferSource();
+    src.buffer = buf; src.loop = true;
+
+    if (type === 'static') {
+      /* Bandpass to shortwave-radio band 900 – 3 kHz */
+      const bp = audioCtx.createBiquadFilter();
+      bp.type = 'bandpass'; bp.frequency.value = 1400; bp.Q.value = 0.55;
+      const hp = audioCtx.createBiquadFilter();
+      hp.type = 'highpass'; hp.frequency.value = 900;
+      src.connect(bp); bp.connect(hp); hp.connect(ambGainNode);
+    } else if (type === 'brown') {
+      /* Low-pass to keep it deep and warm */
+      const lp = audioCtx.createBiquadFilter();
+      lp.type = 'lowpass'; lp.frequency.value = 200;
+      src.connect(lp); lp.connect(ambGainNode);
+    } else {
+      src.connect(ambGainNode);
+    }
+
+    src.start();
+    ambSrcNodes.push(src);
+  }
+}
+
+function setAmb(type) {
+  ambType = type;
+  document.querySelectorAll('.amb-btn').forEach(b =>
+    b.classList.toggle('active', b.dataset.amb === type)
+  );
+  if (audioCtx) startAmbient(type);
+  /* If AudioContext not yet created (pre-play), type is stored and applied on first play */
+}
+
+function setAmbVol(v) {
+  ambVolume = parseFloat(v);
+  if (ambGainNode) {
+    ambGainNode.gain.setTargetAtTime(ambVolume, audioCtx.currentTime, 0.05);
+  }
+}
+
 /* ── Toggle play ── */
 function togglePlay() {
   if (!playing) {
     initAudio();
+    startAmbient(ambType);   /* start ambient layer */
     audio.src = CH[ch].audioSrc;
     audio.load();
     audio.play().catch(() => startDemo());
@@ -782,9 +999,11 @@ function togglePlay() {
     document.getElementById('np-meta').textContent  = CH[ch].meta;
     resetSync();
     updateMediaSession();
+    if (bedtime) refreshBedtimeOverlay();
   } else {
     audio.pause();
     clearDemo();
+    stopAmbient();           /* stop ambient layer */
     playing = false;
     // Restore volume if sleep timer had faded it
     if (sleepRemaining > 0) {
@@ -819,9 +1038,18 @@ audio.addEventListener('timeupdate', () => {
 });
 
 audio.addEventListener('ended', () => {
-  audio.currentTime = 0;
-  audio.play();
-  resetSync();
+  /* Smooth loop: 8-second ambient-only gap then restart speech */
+  if (ambGainNode) {
+    ambGainNode.gain.setTargetAtTime(ambVolume * 0.6, audioCtx.currentTime, 1.5);
+  }
+  setTimeout(() => {
+    audio.currentTime = 0;
+    audio.play().catch(() => {});
+    resetSync();
+    if (ambGainNode) {
+      ambGainNode.gain.setTargetAtTime(ambVolume, audioCtx.currentTime, 2.0);
+    }
+  }, 8000);
 });
 
 function fmt(s) {
@@ -857,6 +1085,7 @@ function selectCh(id, el) {
     resetSync();
     updateMediaSession();
   }
+  if (bedtime) refreshBedtimeOverlay();
 }
 
 /* ── Sync reset ── */
@@ -1033,6 +1262,35 @@ function updateSleepUI(secs) {
     btn.classList.remove('active');
     lbl.textContent = 'sleep';
   }
+  /* Keep bedtime overlay sleep line in sync */
+  const bms = document.getElementById('bm-sleep');
+  if (bms) bms.textContent = secs > 0 ? `sleep in ${fmt(secs)}` : '';
+}
+
+/* ── Bedtime mode ── */
+let bedtime = false;
+
+function toggleBedtime() {
+  bedtime = !bedtime;
+  document.body.classList.toggle('bedtime', bedtime);
+  const btn = document.getElementById('bedtime-btn');
+  btn.classList.toggle('active', bedtime);
+  document.getElementById('bedtime-lbl').textContent = bedtime ? 'awake' : 'rest';
+  if (bedtime) refreshBedtimeOverlay();
+}
+
+function refreshBedtimeOverlay() {
+  const title = playing ? CH[ch].title  : 'Deep Relay';
+  const meta  = playing ? CH[ch].meta   : 'select a channel · press play';
+  document.getElementById('bm-channel').textContent = title;
+  document.getElementById('bm-meta').textContent    = meta;
+  /* Reset animation so it replays on each bedtime entry */
+  ['bm-channel','bm-meta','bm-sleep'].forEach(id => {
+    const el = document.getElementById(id);
+    el.style.animation = 'none';
+    el.offsetHeight; /* reflow */
+    el.style.animation = '';
+  });
 }
 
 /* ── Media Session (lock screen controls) ── */

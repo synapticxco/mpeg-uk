@@ -1,0 +1,2150 @@
+{
+  "message": "RIGHT ASCENSION NINETEEN HOURS TWENTY FIVE MINUTES DECLINATION MINUS TWENTY SEVEN DEGREES SIGNAL DURATION SEVENTY TWO SECONDS DATE NINETEEN SEVENTY SEVEN AUGUST FIFTEEN WE ARE STILL LISTENING",
+  "arg_start_date": "2026-04-01",
+  "cipher_type": "Straddling checkerboard with astronomical key rotation",
+  "key_sources": [
+    {
+      "week": 0,
+      "constant": 1420405751.786,
+      "description": "Hydrogen line frequency in Hz \u2014 the universal frequency",
+      "source": "NIST / ITU"
+    },
+    {
+      "week": 1,
+      "constant": 299792458,
+      "description": "Speed of light in m/s",
+      "source": "NIST"
+    },
+    {
+      "week": 2,
+      "constant": 6.6743e-11,
+      "description": "Gravitational constant G (m\u00b3 kg\u207b\u00b9 s\u207b\u00b2) \u2014 mantissa digits only",
+      "source": "CODATA 2018"
+    },
+    {
+      "week": 3,
+      "constant": 1.380649e-23,
+      "description": "Boltzmann constant kB \u2014 mantissa digits only",
+      "source": "NIST"
+    },
+    {
+      "week": 4,
+      "constant": 149597870700,
+      "description": "1 AU in metres (exact, IAU 2012)",
+      "source": "IAU"
+    },
+    {
+      "week": 5,
+      "constant": 9460730472580800,
+      "description": "1 light-year in metres",
+      "source": "IAU"
+    },
+    {
+      "week": 6,
+      "constant": 78352,
+      "description": "One-way signal delay to Voyager 1 in seconds (2026-01-01)",
+      "source": "JPL Horizons"
+    },
+    {
+      "week": 7,
+      "constant": 3.085677581e+16,
+      "description": "1 parsec in metres \u2014 mantissa digits only",
+      "source": "IAU"
+    }
+  ],
+  "header_format": "5 digits: [key_selector, day_hundreds, day_tens, day_units, check_sum_mod10]",
+  "group_size": 5,
+  "schedule_90_days": [
+    {
+      "day_index": 0,
+      "date": "2026-04-01",
+      "fragment": "RIG",
+      "key_week": 0,
+      "key_source": "Hydrogen line frequency in Hz \u2014 the universal frequency",
+      "groups": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          8,
+          7,
+          3,
+          4,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 1,
+      "date": "2026-04-02",
+      "fragment": "HT ",
+      "key_week": 0,
+      "key_source": "Hydrogen line frequency in Hz \u2014 the universal frequency",
+      "groups": [
+        [
+          0,
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          3,
+          5,
+          4,
+          9,
+          8
+        ]
+      ]
+    },
+    {
+      "day_index": 2,
+      "date": "2026-04-03",
+      "fragment": "ASC",
+      "key_week": 0,
+      "key_source": "Hydrogen line frequency in Hz \u2014 the universal frequency",
+      "groups": [
+        [
+          0,
+          0,
+          0,
+          2,
+          2
+        ],
+        [
+          2,
+          6,
+          3,
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 3,
+      "date": "2026-04-04",
+      "fragment": "ENS",
+      "key_week": 0,
+      "key_source": "Hydrogen line frequency in Hz \u2014 the universal frequency",
+      "groups": [
+        [
+          0,
+          0,
+          0,
+          3,
+          3
+        ],
+        [
+          1,
+          5,
+          6,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 4,
+      "date": "2026-04-05",
+      "fragment": "ION",
+      "key_week": 0,
+      "key_source": "Hydrogen line frequency in Hz \u2014 the universal frequency",
+      "groups": [
+        [
+          0,
+          0,
+          0,
+          4,
+          4
+        ],
+        [
+          7,
+          0,
+          5,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 5,
+      "date": "2026-04-06",
+      "fragment": " NI",
+      "key_week": 0,
+      "key_source": "Hydrogen line frequency in Hz \u2014 the universal frequency",
+      "groups": [
+        [
+          0,
+          0,
+          0,
+          5,
+          5
+        ],
+        [
+          9,
+          8,
+          5,
+          7,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 6,
+      "date": "2026-04-07",
+      "fragment": "NET",
+      "key_week": 0,
+      "key_source": "Hydrogen line frequency in Hz \u2014 the universal frequency",
+      "groups": [
+        [
+          0,
+          0,
+          0,
+          6,
+          6
+        ],
+        [
+          5,
+          1,
+          4,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 7,
+      "date": "2026-04-08",
+      "fragment": "EEN",
+      "key_week": 1,
+      "key_source": "Speed of light in m/s",
+      "groups": [
+        [
+          1,
+          0,
+          0,
+          7,
+          8
+        ],
+        [
+          2,
+          2,
+          5,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 8,
+      "date": "2026-04-09",
+      "fragment": " HO",
+      "key_week": 1,
+      "key_source": "Speed of light in m/s",
+      "groups": [
+        [
+          1,
+          0,
+          0,
+          8,
+          9
+        ],
+        [
+          6,
+          8,
+          3,
+          5,
+          4
+        ]
+      ]
+    },
+    {
+      "day_index": 9,
+      "date": "2026-04-10",
+      "fragment": "URS",
+      "key_week": 1,
+      "key_source": "Speed of light in m/s",
+      "groups": [
+        [
+          1,
+          0,
+          0,
+          9,
+          0
+        ],
+        [
+          6,
+          2,
+          0,
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 10,
+      "date": "2026-04-11",
+      "fragment": " TW",
+      "key_week": 1,
+      "key_source": "Speed of light in m/s",
+      "groups": [
+        [
+          1,
+          0,
+          1,
+          0,
+          2
+        ],
+        [
+          6,
+          8,
+          9,
+          6,
+          4
+        ]
+      ]
+    },
+    {
+      "day_index": 11,
+      "date": "2026-04-12",
+      "fragment": "ENT",
+      "key_week": 1,
+      "key_source": "Speed of light in m/s",
+      "groups": [
+        [
+          1,
+          0,
+          1,
+          1,
+          3
+        ],
+        [
+          2,
+          5,
+          9,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 12,
+      "date": "2026-04-13",
+      "fragment": "Y F",
+      "key_week": 1,
+      "key_source": "Speed of light in m/s",
+      "groups": [
+        [
+          1,
+          0,
+          1,
+          2,
+          4
+        ],
+        [
+          6,
+          6,
+          6,
+          8,
+          3
+        ],
+        [
+          3,
+          0,
+          0,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 13,
+      "date": "2026-04-14",
+      "fragment": "IVE",
+      "key_week": 1,
+      "key_source": "Speed of light in m/s",
+      "groups": [
+        [
+          1,
+          0,
+          1,
+          3,
+          5
+        ],
+        [
+          8,
+          6,
+          3,
+          2,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 14,
+      "date": "2026-04-15",
+      "fragment": " MI",
+      "key_week": 2,
+      "key_source": "Gravitational constant G (m\u00b3 kg\u207b\u00b9 s\u207b\u00b2) \u2014 mantissa digits only",
+      "groups": [
+        [
+          2,
+          0,
+          1,
+          4,
+          7
+        ],
+        [
+          9,
+          8,
+          8,
+          9,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 15,
+      "date": "2026-04-16",
+      "fragment": "NUT",
+      "key_week": 2,
+      "key_source": "Gravitational constant G (m\u00b3 kg\u207b\u00b9 s\u207b\u00b2) \u2014 mantissa digits only",
+      "groups": [
+        [
+          2,
+          0,
+          1,
+          5,
+          8
+        ],
+        [
+          1,
+          9,
+          2,
+          7,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 16,
+      "date": "2026-04-17",
+      "fragment": "ES ",
+      "key_week": 2,
+      "key_source": "Gravitational constant G (m\u00b3 kg\u207b\u00b9 s\u207b\u00b2) \u2014 mantissa digits only",
+      "groups": [
+        [
+          2,
+          0,
+          1,
+          6,
+          9
+        ],
+        [
+          6,
+          5,
+          9,
+          8,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 17,
+      "date": "2026-04-18",
+      "fragment": "DEC",
+      "key_week": 2,
+      "key_source": "Gravitational constant G (m\u00b3 kg\u207b\u00b9 s\u207b\u00b2) \u2014 mantissa digits only",
+      "groups": [
+        [
+          2,
+          0,
+          1,
+          7,
+          0
+        ],
+        [
+          8,
+          2,
+          6,
+          8,
+          1
+        ]
+      ]
+    },
+    {
+      "day_index": 18,
+      "date": "2026-04-19",
+      "fragment": "LIN",
+      "key_week": 2,
+      "key_source": "Gravitational constant G (m\u00b3 kg\u207b\u00b9 s\u207b\u00b2) \u2014 mantissa digits only",
+      "groups": [
+        [
+          2,
+          0,
+          1,
+          8,
+          1
+        ],
+        [
+          8,
+          8,
+          0,
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 19,
+      "date": "2026-04-20",
+      "fragment": "ATI",
+      "key_week": 2,
+      "key_source": "Gravitational constant G (m\u00b3 kg\u207b\u00b9 s\u207b\u00b2) \u2014 mantissa digits only",
+      "groups": [
+        [
+          2,
+          0,
+          1,
+          9,
+          2
+        ],
+        [
+          4,
+          7,
+          0,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 20,
+      "date": "2026-04-21",
+      "fragment": "ON ",
+      "key_week": 2,
+      "key_source": "Gravitational constant G (m\u00b3 kg\u207b\u00b9 s\u207b\u00b2) \u2014 mantissa digits only",
+      "groups": [
+        [
+          2,
+          0,
+          2,
+          0,
+          4
+        ],
+        [
+          3,
+          1,
+          9,
+          8,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 21,
+      "date": "2026-04-22",
+      "fragment": "MIN",
+      "key_week": 3,
+      "key_source": "Boltzmann constant kB \u2014 mantissa digits only",
+      "groups": [
+        [
+          3,
+          0,
+          2,
+          1,
+          6
+        ],
+        [
+          5,
+          9,
+          4,
+          6,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 22,
+      "date": "2026-04-23",
+      "fragment": "US ",
+      "key_week": 3,
+      "key_source": "Boltzmann constant kB \u2014 mantissa digits only",
+      "groups": [
+        [
+          3,
+          0,
+          2,
+          2,
+          7
+        ],
+        [
+          7,
+          2,
+          2,
+          7,
+          8
+        ]
+      ]
+    },
+    {
+      "day_index": 23,
+      "date": "2026-04-24",
+      "fragment": "TWE",
+      "key_week": 3,
+      "key_source": "Boltzmann constant kB \u2014 mantissa digits only",
+      "groups": [
+        [
+          3,
+          0,
+          2,
+          3,
+          8
+        ],
+        [
+          3,
+          7,
+          4,
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 24,
+      "date": "2026-04-25",
+      "fragment": "NTY",
+      "key_week": 3,
+      "key_source": "Boltzmann constant kB \u2014 mantissa digits only",
+      "groups": [
+        [
+          3,
+          0,
+          2,
+          4,
+          9
+        ],
+        [
+          6,
+          3,
+          7,
+          6,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 25,
+      "date": "2026-04-26",
+      "fragment": " SE",
+      "key_week": 3,
+      "key_source": "Boltzmann constant kB \u2014 mantissa digits only",
+      "groups": [
+        [
+          3,
+          0,
+          2,
+          5,
+          0
+        ],
+        [
+          7,
+          8,
+          2,
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 26,
+      "date": "2026-04-27",
+      "fragment": "VEN",
+      "key_week": 3,
+      "key_source": "Boltzmann constant kB \u2014 mantissa digits only",
+      "groups": [
+        [
+          3,
+          0,
+          2,
+          6,
+          1
+        ],
+        [
+          7,
+          3,
+          1,
+          6,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 27,
+      "date": "2026-04-28",
+      "fragment": " DE",
+      "key_week": 3,
+      "key_source": "Boltzmann constant kB \u2014 mantissa digits only",
+      "groups": [
+        [
+          3,
+          0,
+          2,
+          7,
+          2
+        ],
+        [
+          7,
+          8,
+          5,
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "day_index": 28,
+      "date": "2026-04-29",
+      "fragment": "GRE",
+      "key_week": 4,
+      "key_source": "1 AU in metres (exact, IAU 2012)",
+      "groups": [
+        [
+          4,
+          0,
+          2,
+          8,
+          4
+        ],
+        [
+          3,
+          4,
+          0,
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 29,
+      "date": "2026-04-30",
+      "fragment": "ES ",
+      "key_week": 4,
+      "key_source": "1 AU in metres (exact, IAU 2012)",
+      "groups": [
+        [
+          4,
+          0,
+          2,
+          9,
+          5
+        ],
+        [
+          1,
+          2,
+          6,
+          8,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 30,
+      "date": "2026-05-01",
+      "fragment": "SIG",
+      "key_week": 4,
+      "key_source": "1 AU in metres (exact, IAU 2012)",
+      "groups": [
+        [
+          4,
+          0,
+          3,
+          0,
+          7
+        ],
+        [
+          2,
+          8,
+          3,
+          4,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 31,
+      "date": "2026-05-02",
+      "fragment": "NAL",
+      "key_week": 4,
+      "key_source": "1 AU in metres (exact, IAU 2012)",
+      "groups": [
+        [
+          4,
+          0,
+          3,
+          1,
+          8
+        ],
+        [
+          7,
+          9,
+          3,
+          8,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 32,
+      "date": "2026-05-03",
+      "fragment": " DU",
+      "key_week": 4,
+      "key_source": "1 AU in metres (exact, IAU 2012)",
+      "groups": [
+        [
+          4,
+          0,
+          3,
+          2,
+          9
+        ],
+        [
+          6,
+          8,
+          3,
+          2,
+          6
+        ],
+        [
+          2,
+          0,
+          0,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 33,
+      "date": "2026-05-04",
+      "fragment": "RAT",
+      "key_week": 4,
+      "key_source": "1 AU in metres (exact, IAU 2012)",
+      "groups": [
+        [
+          4,
+          0,
+          3,
+          3,
+          0
+        ],
+        [
+          0,
+          9,
+          4,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 34,
+      "date": "2026-05-05",
+      "fragment": "ION",
+      "key_week": 4,
+      "key_source": "1 AU in metres (exact, IAU 2012)",
+      "groups": [
+        [
+          4,
+          0,
+          3,
+          4,
+          1
+        ],
+        [
+          8,
+          5,
+          7,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 35,
+      "date": "2026-05-06",
+      "fragment": " SE",
+      "key_week": 5,
+      "key_source": "1 light-year in metres",
+      "groups": [
+        [
+          5,
+          0,
+          3,
+          5,
+          3
+        ],
+        [
+          1,
+          8,
+          5,
+          9,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 36,
+      "date": "2026-05-07",
+      "fragment": "VEN",
+      "key_week": 5,
+      "key_source": "1 light-year in metres",
+      "groups": [
+        [
+          5,
+          0,
+          3,
+          6,
+          4
+        ],
+        [
+          1,
+          3,
+          9,
+          7,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 37,
+      "date": "2026-05-08",
+      "fragment": "TY ",
+      "key_week": 5,
+      "key_source": "1 light-year in metres",
+      "groups": [
+        [
+          5,
+          0,
+          3,
+          7,
+          5
+        ],
+        [
+          4,
+          1,
+          6,
+          1,
+          8
+        ]
+      ]
+    },
+    {
+      "day_index": 38,
+      "date": "2026-05-09",
+      "fragment": "TWO",
+      "key_week": 5,
+      "key_source": "1 light-year in metres",
+      "groups": [
+        [
+          5,
+          0,
+          3,
+          8,
+          6
+        ],
+        [
+          4,
+          1,
+          4,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 39,
+      "date": "2026-05-10",
+      "fragment": " SE",
+      "key_week": 5,
+      "key_source": "1 light-year in metres",
+      "groups": [
+        [
+          5,
+          0,
+          3,
+          9,
+          7
+        ],
+        [
+          1,
+          8,
+          5,
+          9,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 40,
+      "date": "2026-05-11",
+      "fragment": "CON",
+      "key_week": 5,
+      "key_source": "1 light-year in metres",
+      "groups": [
+        [
+          5,
+          0,
+          4,
+          0,
+          9
+        ],
+        [
+          8,
+          1,
+          0,
+          7,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 41,
+      "date": "2026-05-12",
+      "fragment": "DS ",
+      "key_week": 5,
+      "key_source": "1 light-year in metres",
+      "groups": [
+        [
+          5,
+          0,
+          4,
+          1,
+          0
+        ],
+        [
+          8,
+          2,
+          5,
+          1,
+          8
+        ]
+      ]
+    },
+    {
+      "day_index": 42,
+      "date": "2026-05-13",
+      "fragment": "DAT",
+      "key_week": 6,
+      "key_source": "One-way signal delay to Voyager 1 in seconds (2026-01-01)",
+      "groups": [
+        [
+          6,
+          0,
+          4,
+          2,
+          2
+        ],
+        [
+          6,
+          2,
+          3,
+          8,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 43,
+      "date": "2026-05-14",
+      "fragment": "E N",
+      "key_week": 6,
+      "key_source": "One-way signal delay to Voyager 1 in seconds (2026-01-01)",
+      "groups": [
+        [
+          6,
+          0,
+          4,
+          3,
+          3
+        ],
+        [
+          7,
+          9,
+          8,
+          2,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 44,
+      "date": "2026-05-15",
+      "fragment": "INE",
+      "key_week": 6,
+      "key_source": "One-way signal delay to Voyager 1 in seconds (2026-01-01)",
+      "groups": [
+        [
+          6,
+          0,
+          4,
+          4,
+          4
+        ],
+        [
+          0,
+          2,
+          7,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 45,
+      "date": "2026-05-16",
+      "fragment": "TEE",
+      "key_week": 6,
+      "key_source": "One-way signal delay to Voyager 1 in seconds (2026-01-01)",
+      "groups": [
+        [
+          6,
+          0,
+          4,
+          5,
+          5
+        ],
+        [
+          8,
+          7,
+          7,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 46,
+      "date": "2026-05-17",
+      "fragment": "N S",
+      "key_week": 6,
+      "key_source": "One-way signal delay to Voyager 1 in seconds (2026-01-01)",
+      "groups": [
+        [
+          6,
+          0,
+          4,
+          6,
+          6
+        ],
+        [
+          2,
+          9,
+          8,
+          4,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 47,
+      "date": "2026-05-18",
+      "fragment": "EVE",
+      "key_week": 6,
+      "key_source": "One-way signal delay to Voyager 1 in seconds (2026-01-01)",
+      "groups": [
+        [
+          6,
+          0,
+          4,
+          7,
+          7
+        ],
+        [
+          7,
+          9,
+          3,
+          7,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 48,
+      "date": "2026-05-19",
+      "fragment": "NTY",
+      "key_week": 6,
+      "key_source": "One-way signal delay to Voyager 1 in seconds (2026-01-01)",
+      "groups": [
+        [
+          6,
+          0,
+          4,
+          8,
+          8
+        ],
+        [
+          2,
+          8,
+          9,
+          6,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 49,
+      "date": "2026-05-20",
+      "fragment": " SE",
+      "key_week": 7,
+      "key_source": "1 parsec in metres \u2014 mantissa digits only",
+      "groups": [
+        [
+          7,
+          0,
+          4,
+          9,
+          0
+        ],
+        [
+          9,
+          8,
+          2,
+          3,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 50,
+      "date": "2026-05-21",
+      "fragment": "VEN",
+      "key_week": 7,
+      "key_source": "1 parsec in metres \u2014 mantissa digits only",
+      "groups": [
+        [
+          7,
+          0,
+          5,
+          0,
+          2
+        ],
+        [
+          9,
+          3,
+          3,
+          6,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 51,
+      "date": "2026-05-22",
+      "fragment": " AU",
+      "key_week": 7,
+      "key_source": "1 parsec in metres \u2014 mantissa digits only",
+      "groups": [
+        [
+          7,
+          0,
+          5,
+          1,
+          3
+        ],
+        [
+          9,
+          8,
+          8,
+          9,
+          2
+        ]
+      ]
+    },
+    {
+      "day_index": 52,
+      "date": "2026-05-23",
+      "fragment": "GUS",
+      "key_week": 7,
+      "key_source": "1 parsec in metres \u2014 mantissa digits only",
+      "groups": [
+        [
+          7,
+          0,
+          5,
+          2,
+          4
+        ],
+        [
+          4,
+          4,
+          9,
+          2,
+          2
+        ]
+      ]
+    },
+    {
+      "day_index": 53,
+      "date": "2026-05-24",
+      "fragment": "T F",
+      "key_week": 7,
+      "key_source": "1 parsec in metres \u2014 mantissa digits only",
+      "groups": [
+        [
+          7,
+          0,
+          5,
+          3,
+          5
+        ],
+        [
+          0,
+          9,
+          8,
+          4,
+          3
+        ]
+      ]
+    },
+    {
+      "day_index": 54,
+      "date": "2026-05-25",
+      "fragment": "IFT",
+      "key_week": 7,
+      "key_source": "1 parsec in metres \u2014 mantissa digits only",
+      "groups": [
+        [
+          7,
+          0,
+          5,
+          4,
+          6
+        ],
+        [
+          7,
+          4,
+          3,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 55,
+      "date": "2026-05-26",
+      "fragment": "EEN",
+      "key_week": 7,
+      "key_source": "1 parsec in metres \u2014 mantissa digits only",
+      "groups": [
+        [
+          7,
+          0,
+          5,
+          5,
+          7
+        ],
+        [
+          3,
+          3,
+          6,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 56,
+      "date": "2026-05-27",
+      "fragment": " WE",
+      "key_week": 8,
+      "key_source": "Hydrogen line frequency in Hz \u2014 the universal frequency",
+      "groups": [
+        [
+          0,
+          0,
+          5,
+          6,
+          1
+        ],
+        [
+          9,
+          8,
+          9,
+          4,
+          1
+        ]
+      ]
+    },
+    {
+      "day_index": 57,
+      "date": "2026-05-28",
+      "fragment": " AR",
+      "key_week": 8,
+      "key_source": "Hydrogen line frequency in Hz \u2014 the universal frequency",
+      "groups": [
+        [
+          0,
+          0,
+          5,
+          7,
+          2
+        ],
+        [
+          9,
+          8,
+          2,
+          8,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 58,
+      "date": "2026-05-29",
+      "fragment": "E S",
+      "key_week": 8,
+      "key_source": "Hydrogen line frequency in Hz \u2014 the universal frequency",
+      "groups": [
+        [
+          0,
+          0,
+          5,
+          8,
+          3
+        ],
+        [
+          1,
+          9,
+          8,
+          6,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 59,
+      "date": "2026-05-30",
+      "fragment": "TIL",
+      "key_week": 8,
+      "key_source": "Hydrogen line frequency in Hz \u2014 the universal frequency",
+      "groups": [
+        [
+          0,
+          0,
+          5,
+          9,
+          4
+        ],
+        [
+          4,
+          7,
+          3,
+          8,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 60,
+      "date": "2026-05-31",
+      "fragment": "L L",
+      "key_week": 8,
+      "key_source": "Hydrogen line frequency in Hz \u2014 the universal frequency",
+      "groups": [
+        [
+          0,
+          0,
+          6,
+          0,
+          6
+        ],
+        [
+          3,
+          8,
+          9,
+          8,
+          3
+        ],
+        [
+          8,
+          0,
+          0,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 61,
+      "date": "2026-06-01",
+      "fragment": "IST",
+      "key_week": 8,
+      "key_source": "Hydrogen line frequency in Hz \u2014 the universal frequency",
+      "groups": [
+        [
+          0,
+          0,
+          6,
+          1,
+          7
+        ],
+        [
+          7,
+          6,
+          4,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 62,
+      "date": "2026-06-02",
+      "fragment": "ENI",
+      "key_week": 8,
+      "key_source": "Hydrogen line frequency in Hz \u2014 the universal frequency",
+      "groups": [
+        [
+          0,
+          0,
+          6,
+          2,
+          8
+        ],
+        [
+          1,
+          5,
+          7,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 63,
+      "date": "2026-06-03",
+      "fragment": "NGR",
+      "key_week": 9,
+      "key_source": "Speed of light in m/s",
+      "groups": [
+        [
+          1,
+          0,
+          6,
+          3,
+          0
+        ],
+        [
+          5,
+          3,
+          4,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 64,
+      "date": "2026-06-04",
+      "fragment": "IGH",
+      "key_week": 9,
+      "key_source": "Speed of light in m/s",
+      "groups": [
+        [
+          1,
+          0,
+          6,
+          4,
+          1
+        ],
+        [
+          8,
+          3,
+          4,
+          3,
+          5
+        ]
+      ]
+    },
+    {
+      "day_index": 65,
+      "date": "2026-06-05",
+      "fragment": "T A",
+      "key_week": 9,
+      "key_source": "Speed of light in m/s",
+      "groups": [
+        [
+          1,
+          0,
+          6,
+          5,
+          2
+        ],
+        [
+          9,
+          6,
+          8,
+          7,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 66,
+      "date": "2026-06-06",
+      "fragment": "SCE",
+      "key_week": 9,
+      "key_source": "Speed of light in m/s",
+      "groups": [
+        [
+          1,
+          0,
+          6,
+          6,
+          3
+        ],
+        [
+          1,
+          3,
+          1,
+          2,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 67,
+      "date": "2026-06-07",
+      "fragment": "NSI",
+      "key_week": 9,
+      "key_source": "Speed of light in m/s",
+      "groups": [
+        [
+          1,
+          0,
+          6,
+          7,
+          4
+        ],
+        [
+          5,
+          1,
+          8,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 68,
+      "date": "2026-06-08",
+      "fragment": "ON ",
+      "key_week": 9,
+      "key_source": "Speed of light in m/s",
+      "groups": [
+        [
+          1,
+          0,
+          6,
+          8,
+          5
+        ],
+        [
+          4,
+          5,
+          6,
+          8,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 69,
+      "date": "2026-06-09",
+      "fragment": "NIN",
+      "key_week": 9,
+      "key_source": "Speed of light in m/s",
+      "groups": [
+        [
+          1,
+          0,
+          6,
+          9,
+          6
+        ],
+        [
+          5,
+          8,
+          5,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 70,
+      "date": "2026-06-10",
+      "fragment": "ETE",
+      "key_week": 10,
+      "key_source": "Gravitational constant G (m\u00b3 kg\u207b\u00b9 s\u207b\u00b2) \u2014 mantissa digits only",
+      "groups": [
+        [
+          2,
+          0,
+          7,
+          0,
+          9
+        ],
+        [
+          6,
+          7,
+          6,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 71,
+      "date": "2026-06-11",
+      "fragment": "EN ",
+      "key_week": 10,
+      "key_source": "Gravitational constant G (m\u00b3 kg\u207b\u00b9 s\u207b\u00b2) \u2014 mantissa digits only",
+      "groups": [
+        [
+          2,
+          0,
+          7,
+          1,
+          0
+        ],
+        [
+          6,
+          1,
+          9,
+          8,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 72,
+      "date": "2026-06-12",
+      "fragment": "HOU",
+      "key_week": 10,
+      "key_source": "Gravitational constant G (m\u00b3 kg\u207b\u00b9 s\u207b\u00b2) \u2014 mantissa digits only",
+      "groups": [
+        [
+          2,
+          0,
+          7,
+          2,
+          1
+        ],
+        [
+          8,
+          5,
+          3,
+          9,
+          2
+        ]
+      ]
+    },
+    {
+      "day_index": 73,
+      "date": "2026-06-13",
+      "fragment": "RS ",
+      "key_week": 10,
+      "key_source": "Gravitational constant G (m\u00b3 kg\u207b\u00b9 s\u207b\u00b2) \u2014 mantissa digits only",
+      "groups": [
+        [
+          2,
+          0,
+          7,
+          3,
+          2
+        ],
+        [
+          2,
+          5,
+          9,
+          8,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 74,
+      "date": "2026-06-14",
+      "fragment": "TWE",
+      "key_week": 10,
+      "key_source": "Gravitational constant G (m\u00b3 kg\u207b\u00b9 s\u207b\u00b2) \u2014 mantissa digits only",
+      "groups": [
+        [
+          2,
+          0,
+          7,
+          4,
+          3
+        ],
+        [
+          7,
+          9,
+          4,
+          6,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 75,
+      "date": "2026-06-15",
+      "fragment": "NTY",
+      "key_week": 10,
+      "key_source": "Gravitational constant G (m\u00b3 kg\u207b\u00b9 s\u207b\u00b2) \u2014 mantissa digits only",
+      "groups": [
+        [
+          2,
+          0,
+          7,
+          5,
+          4
+        ],
+        [
+          1,
+          7,
+          9,
+          6,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 76,
+      "date": "2026-06-16",
+      "fragment": " FI",
+      "key_week": 10,
+      "key_source": "Gravitational constant G (m\u00b3 kg\u207b\u00b9 s\u207b\u00b2) \u2014 mantissa digits only",
+      "groups": [
+        [
+          2,
+          0,
+          7,
+          6,
+          5
+        ],
+        [
+          9,
+          8,
+          8,
+          3,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 77,
+      "date": "2026-06-17",
+      "fragment": "VE ",
+      "key_week": 11,
+      "key_source": "Boltzmann constant kB \u2014 mantissa digits only",
+      "groups": [
+        [
+          3,
+          0,
+          7,
+          7,
+          7
+        ],
+        [
+          7,
+          3,
+          1,
+          7,
+          8
+        ]
+      ]
+    },
+    {
+      "day_index": 78,
+      "date": "2026-06-18",
+      "fragment": "MIN",
+      "key_week": 11,
+      "key_source": "Boltzmann constant kB \u2014 mantissa digits only",
+      "groups": [
+        [
+          3,
+          0,
+          7,
+          8,
+          8
+        ],
+        [
+          5,
+          9,
+          4,
+          6,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 79,
+      "date": "2026-06-19",
+      "fragment": "UTE",
+      "key_week": 11,
+      "key_source": "Boltzmann constant kB \u2014 mantissa digits only",
+      "groups": [
+        [
+          3,
+          0,
+          7,
+          9,
+          9
+        ],
+        [
+          7,
+          2,
+          3,
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 80,
+      "date": "2026-06-20",
+      "fragment": "S D",
+      "key_week": 11,
+      "key_source": "Boltzmann constant kB \u2014 mantissa digits only",
+      "groups": [
+        [
+          3,
+          0,
+          8,
+          0,
+          1
+        ],
+        [
+          2,
+          7,
+          8,
+          5,
+          2
+        ]
+      ]
+    },
+    {
+      "day_index": 81,
+      "date": "2026-06-21",
+      "fragment": "ECL",
+      "key_week": 11,
+      "key_source": "Boltzmann constant kB \u2014 mantissa digits only",
+      "groups": [
+        [
+          3,
+          0,
+          8,
+          1,
+          2
+        ],
+        [
+          1,
+          5,
+          1,
+          5,
+          8
+        ]
+      ]
+    },
+    {
+      "day_index": 82,
+      "date": "2026-06-22",
+      "fragment": "INA",
+      "key_week": 11,
+      "key_source": "Boltzmann constant kB \u2014 mantissa digits only",
+      "groups": [
+        [
+          3,
+          0,
+          8,
+          2,
+          3
+        ],
+        [
+          4,
+          6,
+          8,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 83,
+      "date": "2026-06-23",
+      "fragment": "TIO",
+      "key_week": 11,
+      "key_source": "Boltzmann constant kB \u2014 mantissa digits only",
+      "groups": [
+        [
+          3,
+          0,
+          8,
+          3,
+          4
+        ],
+        [
+          3,
+          4,
+          0,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 84,
+      "date": "2026-06-24",
+      "fragment": "N M",
+      "key_week": 12,
+      "key_source": "1 AU in metres (exact, IAU 2012)",
+      "groups": [
+        [
+          4,
+          0,
+          8,
+          4,
+          6
+        ],
+        [
+          7,
+          6,
+          8,
+          3,
+          9
+        ]
+      ]
+    },
+    {
+      "day_index": 85,
+      "date": "2026-06-25",
+      "fragment": "INU",
+      "key_week": 12,
+      "key_source": "1 AU in metres (exact, IAU 2012)",
+      "groups": [
+        [
+          4,
+          0,
+          8,
+          5,
+          7
+        ],
+        [
+          8,
+          7,
+          6,
+          2,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 86,
+      "date": "2026-06-26",
+      "fragment": "S T",
+      "key_week": 12,
+      "key_source": "1 AU in metres (exact, IAU 2012)",
+      "groups": [
+        [
+          4,
+          0,
+          8,
+          6,
+          8
+        ],
+        [
+          2,
+          6,
+          8,
+          4,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 87,
+      "date": "2026-06-27",
+      "fragment": "WEN",
+      "key_week": 12,
+      "key_source": "1 AU in metres (exact, IAU 2012)",
+      "groups": [
+        [
+          4,
+          0,
+          8,
+          7,
+          9
+        ],
+        [
+          6,
+          4,
+          1,
+          7,
+          0
+        ]
+      ]
+    },
+    {
+      "day_index": 88,
+      "date": "2026-06-28",
+      "fragment": "TY ",
+      "key_week": 12,
+      "key_source": "1 AU in metres (exact, IAU 2012)",
+      "groups": [
+        [
+          4,
+          0,
+          8,
+          8,
+          0
+        ],
+        [
+          4,
+          6,
+          6,
+          6,
+          8
+        ]
+      ]
+    },
+    {
+      "day_index": 89,
+      "date": "2026-06-29",
+      "fragment": "SEV",
+      "key_week": 12,
+      "key_source": "1 AU in metres (exact, IAU 2012)",
+      "groups": [
+        [
+          4,
+          0,
+          8,
+          9,
+          1
+        ],
+        [
+          2,
+          1,
+          6,
+          3,
+          0
+        ]
+      ]
+    }
+  ]
+}
