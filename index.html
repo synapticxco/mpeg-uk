@@ -539,6 +539,9 @@
       .bm-sleep   { font-size: 8px; }
     }
   </style>
+  <!-- Cloudflare Web Analytics — replace YOUR_CF_TOKEN with token from dash.cloudflare.com → Web Analytics -->
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js'
+    data-cf-beacon='{"token": "YOUR_CF_TOKEN"}'></script>
 </head>
 
 <body>
@@ -785,7 +788,7 @@ const CH = {
       {
         id: 'pilot', audioSrc: 'archive_pilot.mp3',
         theme: 'HELIOPAUSE CROSSING',
-        fork: { t: 410, prompt: 'MIRA sub-channel active. Number groups transmitting nightly. Pattern is non-random. Format: straddling checkerboard. Origin unresolved.',
+        fork: { t: 410, prompt: 'MIRA sub-channel active. Number groups transmitting nightly. Pattern is non-random. Format: unknown. Origin unresolved.',
                 opts: ['Maintain primary frequency', 'Tune to MIRA — investigate the pattern'] },
         tx: [
           { t:   6, src:'VALE',   msg:'Acquisition of signal confirmed. Voyager 1, day 17,678. Signal strength nominal. One-way light time: 22 hours, 19 minutes.' },
@@ -806,7 +809,7 @@ const CH = {
       {
         id: 'cassini', audioSrc: 'archive_cassini.mp3',
         theme: 'CASSINI — GRAND FINALE',
-        fork: { t: 410, prompt: 'MIRA sub-channel active. Number groups transmitting nightly. Pattern is non-random. Format: straddling checkerboard. Origin unresolved.',
+        fork: { t: 410, prompt: 'MIRA sub-channel active. Number groups transmitting nightly. Pattern is non-random. Format: unknown. Origin unresolved.',
                 opts: ['Maintain primary frequency', 'Tune to MIRA — investigate the pattern'] },
         tx: [
           { t:   6, src:'VALE',   msg:'Cassini, Grand Finale orbit number 22. Ring gap crossing nominal. Atmosphere samples nominal. Telemetry strong. Next periapsis: September 15.' },
@@ -828,7 +831,7 @@ const CH = {
       {
         id: 'voyager', audioSrc: 'archive_voyager.mp3',
         theme: 'THE LONG WAKE',
-        fork: { t: 410, prompt: 'MIRA sub-channel active. Number groups transmitting nightly. Pattern is non-random. Format: straddling checkerboard. Origin unresolved.',
+        fork: { t: 410, prompt: 'MIRA sub-channel active. Number groups transmitting nightly. Pattern is non-random. Format: unknown. Origin unresolved.',
                 opts: ['Maintain primary frequency', 'Tune to MIRA — investigate the pattern'] },
         tx: [
           { t:   6, src:'VALE',   msg:'Pioneer 10, last confirmed contact: January 22, 2003. Signal too weak to acquire. Distance: 80 AU. Status: drifting.' },
@@ -849,7 +852,7 @@ const CH = {
       {
         id: 'apollo', audioSrc: 'archive_apollo.mp3',
         theme: 'OCEAN OF STORMS',
-        fork: { t: 420, prompt: 'MIRA sub-channel active. Number groups transmitting nightly. Pattern is non-random. Format: straddling checkerboard. Origin unresolved.',
+        fork: { t: 420, prompt: 'MIRA sub-channel active. Number groups transmitting nightly. Pattern is non-random. Format: unknown. Origin unresolved.',
                 opts: ['Maintain primary frequency', 'Tune to MIRA — investigate the pattern'] },
         tx: [
           { t:   6, src:'VALE',   msg:'Apollo 11, Houston. Sequence is go. Program alarm 1202 acknowledged. Guidance computer is in overload. You are go to continue powered descent.' },
@@ -872,7 +875,7 @@ const CH = {
       {
         id: 'silence', audioSrc: 'archive_silence.mp3',
         theme: 'THE GRAND SILENCE',
-        fork: { t: 415, prompt: 'MIRA sub-channel active. Number groups transmitting nightly. Pattern is non-random. Format: straddling checkerboard. Origin unresolved.',
+        fork: { t: 415, prompt: 'MIRA sub-channel active. Number groups transmitting nightly. Pattern is non-random. Format: unknown. Origin unresolved.',
                 opts: ['Maintain primary frequency', 'Tune to MIRA — investigate the pattern'] },
         tx: [
           { t:   6, src:'VALE',   msg:'Mars Observer, propulsion system pressurization initiated. Transmitter powered down as per procedure. Scheduled reacquisition at 02:10 UTC. Standing by.' },
@@ -892,7 +895,7 @@ const CH = {
       {
         id: 'sol5111', audioSrc: 'archive_sol5111.mp3',
         theme: 'SOL 5,111',
-        fork: { t: 420, prompt: 'MIRA sub-channel active. Number groups transmitting nightly. Pattern is non-random. Format: straddling checkerboard. Origin unresolved.',
+        fork: { t: 420, prompt: 'MIRA sub-channel active. Number groups transmitting nightly. Pattern is non-random. Format: unknown. Origin unresolved.',
                 opts: ['Maintain primary frequency', 'Tune to MIRA — investigate the pattern'] },
         tx: [
           { t:   6, src:'VALE',   msg:'Opportunity battery charge: 23 percent. Solar array output: 0.0 watts. Dust opacity tau: 10.8. Standing by for uplink window.' },
@@ -912,7 +915,7 @@ const CH = {
       {
         id: 'arecibo', audioSrc: 'archive_arecibo.mp3',
         theme: 'THE ANTENNA COLLAPSE',
-        fork: { t: 410, prompt: 'MIRA sub-channel active. Number groups transmitting nightly. Pattern is non-random. Format: straddling checkerboard. Origin unresolved.',
+        fork: { t: 410, prompt: 'MIRA sub-channel active. Number groups transmitting nightly. Pattern is non-random. Format: unknown. Origin unresolved.',
                 opts: ['Maintain primary frequency', 'Tune to MIRA — investigate the pattern'] },
         tx: [
           { t:   6, src:'VALE',   msg:'Arecibo, 1974. Transmission complete. 1,679 bits. Aimed at M13. Power: 450 kilowatts. The message is on its way. It will arrive in 25,000 years.' },
