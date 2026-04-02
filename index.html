@@ -223,6 +223,16 @@
       border-color: var(--tile-color); background: rgba(255,255,255,0.02);
     }
     .ch-tile.active { border-color: var(--tile-color); background: rgba(255,255,255,0.025); }
+    .ch-tile.demo { position: relative; opacity: 0.62; }
+    .ch-tile.demo::after {
+      content: 'DEMO';
+      position: absolute; top: 5px; right: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7px; letter-spacing: 0.1em;
+      color: var(--text-dim);
+      border: 1px solid var(--border);
+      padding: 1px 4px; border-radius: 2px;
+    }
     .ch-name {
       font-size: 10px; font-weight: 600;
       text-transform: uppercase; letter-spacing: 0.13em;
@@ -611,19 +621,19 @@
       <div class="channels">
         <div class="ch-lbl">channel select</div>
         <div class="ch-tiles">
-          <div class="ch-tile" data-ch="alien" onclick="selectCh('alien',this)">
+          <div class="ch-tile demo" data-ch="alien" onclick="selectCh('alien',this)">
             <span class="ch-name">Alien / WY</span>
             <span class="ch-sub">LV-426 sector</span>
           </div>
-          <div class="ch-tile" data-ch="trek" onclick="selectCh('trek',this)">
+          <div class="ch-tile demo" data-ch="trek" onclick="selectCh('trek',this)">
             <span class="ch-name">Star Trek</span>
             <span class="ch-sub">Starfleet ops</span>
           </div>
-          <div class="ch-tile" data-ch="bsg" onclick="selectCh('bsg',this)">
+          <div class="ch-tile demo" data-ch="bsg" onclick="selectCh('bsg',this)">
             <span class="ch-name">BSG</span>
             <span class="ch-sub">Colonial fleet</span>
           </div>
-          <div class="ch-tile" data-ch="fw" onclick="selectCh('fw',this)">
+          <div class="ch-tile demo" data-ch="fw" onclick="selectCh('fw',this)">
             <span class="ch-name">Firefly</span>
             <span class="ch-sub">Border space</span>
           </div>
@@ -775,7 +785,7 @@ const CH = {
       {
         id: 'pilot', audioSrc: 'archive_pilot.mp3',
         theme: 'HELIOPAUSE CROSSING',
-        fork: { t: 410, prompt: 'MIRA sub-channel active. Encoded sequence repeating. Pattern is non-random. Origin unresolved.',
+        fork: { t: 410, prompt: 'MIRA sub-channel active. Number groups transmitting nightly. Pattern is non-random. Format: straddling checkerboard. Origin unresolved.',
                 opts: ['Maintain primary frequency', 'Tune to MIRA — investigate the pattern'] },
         tx: [
           { t:   6, src:'VALE',   msg:'Acquisition of signal confirmed. Voyager 1, day 17,678. Signal strength nominal. One-way light time: 22 hours, 19 minutes.' },
@@ -789,13 +799,14 @@ const CH = {
           { t: 299, src:'VALE',   msg:'Voyager 2, plasma density increase confirmed. Heliopause crossing. November 5, 2018. Second object of human origin to enter interstellar space.' },
           { t: 386, src:'SOLAN',  msg:'The Wow signal lasted 72 seconds. It came from the direction of Sagittarius. It was at the hydrogen line — the frequency we said any intelligence would use.' },
           { t: 422, src:'VALE',   msg:'Mars Observer. Scheduled acquisition time has passed. No signal. All Deep Space Network stations are monitoring. Silence.' },
+          { t: 478, src:'MIRA',   msg: window.MIRA_TX_MSG, mira:true },
           { t: 485, src:'ROURKE', msg:'SETI Institute, observation log, August 15, 1977. Signal duration: 72 seconds. Frequency: 1,420 megahertz. Designation: 6EQUJ5. Source unidentified.' },
         ],
       },
       {
         id: 'cassini', audioSrc: 'archive_cassini.mp3',
         theme: 'CASSINI — GRAND FINALE',
-        fork: { t: 410, prompt: 'MIRA sub-channel active. Encoded sequence repeating. Pattern is non-random. Origin unresolved.',
+        fork: { t: 410, prompt: 'MIRA sub-channel active. Number groups transmitting nightly. Pattern is non-random. Format: straddling checkerboard. Origin unresolved.',
                 opts: ['Maintain primary frequency', 'Tune to MIRA — investigate the pattern'] },
         tx: [
           { t:   6, src:'VALE',   msg:'Cassini, Grand Finale orbit number 22. Ring gap crossing nominal. Atmosphere samples nominal. Telemetry strong. Next periapsis: September 15.' },
@@ -810,13 +821,14 @@ const CH = {
           { t: 387, src:'SOLAN',  msg:'Venera 9 landed on Venus on October 22, 1975. The surface pressure was 90 atmospheres. The temperature was 730 Kelvin. The probe survived for 53 minutes. It returned one photograph — the first from the surface of another planet. Then the heat killed it.' },
           { t: 425, src:'VALE',   msg:'Apollo 17. Final surface EVA complete. Ascent engine ignition in T minus 4 minutes. The last human footprints are in the dust of Taurus-Littrow.' },
           { t: 445, src:'VALE',   msg:'Cassini Grand Finale. Atmosphere entry confirmed. Signal lost 11:55 UTC, September 15, 2017. Last transmission received.' },
+          { t: 479, src:'MIRA',   msg: window.MIRA_TX_MSG, mira:true },
           { t: 486, src:'VALE',   msg:'Arecibo, 1974. Transmission complete. 1,679 bits. Aimed at M13. Power: 450 kilowatts. The message is on its way. It will arrive in 25,000 years.' },
         ],
       },
       {
         id: 'voyager', audioSrc: 'archive_voyager.mp3',
         theme: 'THE LONG WAKE',
-        fork: { t: 410, prompt: 'MIRA sub-channel active. Encoded sequence repeating. Pattern is non-random. Origin unresolved.',
+        fork: { t: 410, prompt: 'MIRA sub-channel active. Number groups transmitting nightly. Pattern is non-random. Format: straddling checkerboard. Origin unresolved.',
                 opts: ['Maintain primary frequency', 'Tune to MIRA — investigate the pattern'] },
         tx: [
           { t:   6, src:'VALE',   msg:'Pioneer 10, last confirmed contact: January 22, 2003. Signal too weak to acquire. Distance: 80 AU. Status: drifting.' },
@@ -830,13 +842,14 @@ const CH = {
           { t: 388, src:'SOLAN',  msg:'In 1977, someone pressed a button and the Voyagers lifted off. The people in that room are old now, or gone. The spacecraft they launched are the fastest objects our species has ever made. They are still accelerating, very slightly, from the momentum of a button pressed 47 years ago.' },
           { t: 425, src:'VALE',   msg:'Viking 1, November 11, 1982. Final transmission received. After 6 years, 116 days on the surface of Mars. Carrier wave is gone. Lander is silent.' },
           { t: 445, src:'VALE',   msg:'Pioneer 11, last contact: 1995. RTG output insufficient to maintain link. Spacecraft is now beyond antenna boresight. It is gone.' },
+          { t: 479, src:'MIRA',   msg: window.MIRA_TX_MSG, mira:true },
           { t: 486, src:'ROURKE', msg:'SETI Institute, observation log, August 15, 1977. Signal duration: 72 seconds. Frequency: 1,420 megahertz. Designation: Wow signal. No repeat detection.' },
         ],
       },
       {
         id: 'apollo', audioSrc: 'archive_apollo.mp3',
         theme: 'OCEAN OF STORMS',
-        fork: { t: 420, prompt: 'MIRA sub-channel active. Encoded sequence repeating. Pattern is non-random. Origin unresolved.',
+        fork: { t: 420, prompt: 'MIRA sub-channel active. Number groups transmitting nightly. Pattern is non-random. Format: straddling checkerboard. Origin unresolved.',
                 opts: ['Maintain primary frequency', 'Tune to MIRA — investigate the pattern'] },
         tx: [
           { t:   6, src:'VALE',   msg:'Apollo 11, Houston. Sequence is go. Program alarm 1202 acknowledged. Guidance computer is in overload. You are go to continue powered descent.' },
@@ -852,13 +865,14 @@ const CH = {
           { t: 396, src:'SOLAN',  msg:'The Deep Space Network has three stations: Goldstone in California, Madrid in Spain, Canberra in Australia. They are spaced so that as Earth rotates, at least one antenna is always pointed at the sky. It has been that way since 1963. Someone is always listening.' },
           { t: 432, src:'SOLAN',  msg:'The Voyager record has been traveling for 47 years. By the time it reaches another star, our species may be unrecognisable. Or absent.' },
           { t: 449, src:'VALE',   msg:'Apollo 17. Final surface EVA complete. Ascent engine ignition in T minus 4 minutes. The last human footprints are in the dust of Taurus-Littrow.' },
+          { t: 478, src:'MIRA',   msg: window.MIRA_TX_MSG, mira:true },
           { t: 484, src:'ROURKE', msg:'SETI Institute, observation log, August 15, 1977. Signal duration: 72 seconds. Frequency: 1,420 megahertz. Designation: Wow signal. No repeat detection.' },
         ],
       },
       {
         id: 'silence', audioSrc: 'archive_silence.mp3',
         theme: 'THE GRAND SILENCE',
-        fork: { t: 415, prompt: 'MIRA sub-channel active. Encoded sequence repeating. Pattern is non-random. Origin unresolved.',
+        fork: { t: 415, prompt: 'MIRA sub-channel active. Number groups transmitting nightly. Pattern is non-random. Format: straddling checkerboard. Origin unresolved.',
                 opts: ['Maintain primary frequency', 'Tune to MIRA — investigate the pattern'] },
         tx: [
           { t:   6, src:'VALE',   msg:'Mars Observer, propulsion system pressurization initiated. Transmitter powered down as per procedure. Scheduled reacquisition at 02:10 UTC. Standing by.' },
@@ -871,13 +885,14 @@ const CH = {
           { t: 393, src:'SOLAN',  msg:"Cassini's last signal reached Earth 83 minutes after the spacecraft burned up. That 83-minute delay meant we were still receiving telemetry from something that had already ceased to exist. We watched it die, but late. That is what it means to listen from this distance." },
           { t: 430, src:'VALE',   msg:'Viking 1, November 11, 1982. Final transmission received. After 6 years, 116 days on the surface of Mars. Carrier wave is gone. Lander is silent.' },
           { t: 447, src:'VALE',   msg:'Carrier wave is gone. Station is blind. We are standing by on all bands. Continue passive monitoring.' },
+          { t: 479, src:'MIRA',   msg: window.MIRA_TX_MSG, mira:true },
           { t: 485, src:'VALE',   msg:'Arecibo, 1974. Transmission complete. 1,679 bits. Aimed at M13. Power: 450 kilowatts. The message is on its way. It will arrive in 25,000 years.' },
         ],
       },
       {
         id: 'sol5111', audioSrc: 'archive_sol5111.mp3',
         theme: 'SOL 5,111',
-        fork: { t: 420, prompt: 'MIRA sub-channel active. Encoded sequence repeating. Pattern is non-random. Origin unresolved.',
+        fork: { t: 420, prompt: 'MIRA sub-channel active. Number groups transmitting nightly. Pattern is non-random. Format: straddling checkerboard. Origin unresolved.',
                 opts: ['Maintain primary frequency', 'Tune to MIRA — investigate the pattern'] },
         tx: [
           { t:   6, src:'VALE',   msg:'Opportunity battery charge: 23 percent. Solar array output: 0.0 watts. Dust opacity tau: 10.8. Standing by for uplink window.' },
@@ -890,13 +905,14 @@ const CH = {
           { t: 396, src:'SOLAN',  msg:'There are communication blackouts. When a spacecraft passes behind a planet, there is silence — minutes or hours where the signal cannot reach us. The operators wait. They monitor noise. Sometimes the spacecraft reappears. Sometimes it is the last silence before a longer one.' },
           { t: 433, src:'VALE',   msg:'Loss of signal. Beagle 2. December 25, 2003. No further contact was ever received.' },
           { t: 447, src:'VALE',   msg:'InSight. Dead bus. December 21, 2022. Final signal. Elysium Planitia. The seismometer is still.' },
+          { t: 477, src:'MIRA',   msg: window.MIRA_TX_MSG, mira:true },
           { t: 483, src:'VALE',   msg:'Carrier wave is gone. Station is blind. We are standing by on all bands. Continue passive monitoring.' },
         ],
       },
       {
         id: 'arecibo', audioSrc: 'archive_arecibo.mp3',
         theme: 'THE ANTENNA COLLAPSE',
-        fork: { t: 410, prompt: 'MIRA sub-channel active. Encoded sequence repeating. Pattern is non-random. Origin unresolved.',
+        fork: { t: 410, prompt: 'MIRA sub-channel active. Number groups transmitting nightly. Pattern is non-random. Format: straddling checkerboard. Origin unresolved.',
                 opts: ['Maintain primary frequency', 'Tune to MIRA — investigate the pattern'] },
         tx: [
           { t:   6, src:'VALE',   msg:'Arecibo, 1974. Transmission complete. 1,679 bits. Aimed at M13. Power: 450 kilowatts. The message is on its way. It will arrive in 25,000 years.' },
@@ -910,12 +926,77 @@ const CH = {
           { t: 388, src:'SOLAN',  msg:'The Arecibo telescope collapsed in 2020. The dish fell into itself. In 1974 it broadcast the most powerful intentional radio signal ever transmitted from Earth — a 3-minute message aimed at a star cluster 25,000 light-years away. We will not receive a reply for 50,000 years, if there is one.' },
           { t: 437, src:'VALE',   msg:'Cassini Grand Finale. Atmosphere entry confirmed. Signal lost 11:55 UTC, September 15, 2017. Last transmission received.' },
           { t: 445, src:'VALE',   msg:'Arecibo, December 1, 2020. Auxiliary cable failure. Platform descent imminent. Evacuate the site. Final observations complete.' },
+          { t: 479, src:'MIRA',   msg: window.MIRA_TX_MSG, mira:true },
           { t: 485, src:'ROURKE', msg:'SETI Institute, observation log, August 15, 1977. Signal duration: 72 seconds. Frequency: 1,420 megahertz. Designation: Wow signal. No repeat detection.' },
         ],
       },
     ],
   },
 };
+
+/* ── MIRA live cipher (straddling checkerboard, daily fragment) ── */
+(function() {
+  const MSG   = 'RA 19 25 DEC -27 SIGNAL 72S AUGUST 15 1977 WE ARE STILL LISTENING';
+  const START = new Date('2026-04-01T00:00:00Z');
+  const KEYS  = [1420405751.786, 299792458, 6.6743e-11, 1.380649e-23,
+                 149597870700, 9460730472580800, 78352, 3.085677581e16];
+  const HF    = 'ETAONIRS';
+
+  function deriveKey(k) {
+    const s = String(k).replace(/[.\-e+]/g, '');
+    const seen = new Set(), out = [];
+    for (const ch of s) {
+      const d = +ch;
+      if (!isNaN(d) && !seen.has(d)) { seen.add(d); out.push(d); }
+    }
+    for (let d = 0; d < 10; d++) if (!seen.has(d)) out.push(d);
+    return out.slice(0, 10);
+  }
+
+  function buildTable(kd) {
+    const g1 = kd[8], g2 = kd[9];
+    const row0 = kd.filter(d => d !== g1 && d !== g2).slice(0, 8);
+    const enc = {}, dec = {};
+    for (let i = 0; i < HF.length; i++) {
+      enc[HF[i]] = [row0[i]];
+      dec[String(row0[i])] = HF[i];
+    }
+    const alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ ';
+    const rem   = [...alpha].filter(c => !HF.includes(c));
+    for (let i = 0; i < 10; i++) {
+      if (rem[i])    { enc[rem[i]]    = [g1, i]; dec[`${g1},${i}`]    = rem[i]; }
+      if (rem[i+10]) { enc[rem[i+10]] = [g2, i]; dec[`${g2},${i}`] = rem[i+10]; }
+    }
+    return { enc, g1, g2 };
+  }
+
+  function encode(text, tbl) {
+    const d = [];
+    for (const c of text.toUpperCase()) if (tbl.enc[c]) d.push(...tbl.enc[c]);
+    while (d.length % 5) d.push(0);
+    return d;
+  }
+
+  function todayGroups() {
+    const now = new Date(); now.setUTCHours(0,0,0,0);
+    const dayIdx = Math.max(0, Math.floor((now - START) / 86400000));
+    const week   = Math.floor(dayIdx / 7) % KEYS.length;
+    const kd     = deriveKey(KEYS[week]);
+    const tbl    = buildTable(kd);
+    const frag   = (MSG + MSG).slice((dayIdx * 3) % MSG.length, (dayIdx * 3) % MSG.length + 3);
+    const pay    = encode(frag, tbl);
+    const d      = dayIdx % 1000;
+    const hdr    = [week % 10, Math.floor(d/100), Math.floor((d%100)/10), d%10,
+                    (week + Math.floor(d/100) + Math.floor((d%100)/10) + d%10) % 10];
+    const grps   = [hdr];
+    for (let i = 0; i < pay.length; i += 5) grps.push(pay.slice(i, i+5));
+    return grps;
+  }
+
+  /* Exposed globally */
+  window.MIRA_GROUPS = todayGroups();
+  window.MIRA_TX_MSG = window.MIRA_GROUPS.map(g => g.join(' ')).join('  ·  ');
+})();
 
 /* ── State ── */
 let ch          = 'archive';
