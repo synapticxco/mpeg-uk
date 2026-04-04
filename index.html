@@ -1005,8 +1005,9 @@ const CH = {
 })();
 
 /* ── State ── */
-let ch          = 'archive';
-let playing     = false;
+let ch            = 'archive';
+let playing       = false;
+let sessionLoaded = false;  // true once audio.src is set; prevents re-picking on pause→resume
 let audioCtx    = null;
 let analyser    = null;
 let srcNode     = null;
@@ -1235,9 +1236,12 @@ function togglePlay() {
     track('play_pressed');
     initAudio();
     startAmbient(ambType);   /* start ambient layer */
-    if (ch === 'archive') pickArchiveSession();
-    audio.src = CH[ch].audioSrc;
-    audio.load();
+    if (!sessionLoaded) {
+      if (ch === 'archive') pickArchiveSession();
+      audio.src = CH[ch].audioSrc;
+      audio.load();
+      sessionLoaded = true;
+    }
     audio.play().catch(() => startDemo());
     playing = true;
     document.getElementById('play-ico').innerHTML =
@@ -1301,6 +1305,7 @@ audio.addEventListener('ended', () => {
       pickArchiveSession();
       audio.src = CH.archive.audioSrc;
       audio.load();
+      sessionLoaded = true;
     } else {
       audio.currentTime = 0;
     }
@@ -1347,6 +1352,7 @@ function pickArchiveSession() {
 function selectCh(id, el) {
   track('channel_switched', { to: id });
   ch = id;
+  sessionLoaded = false;  // new channel always needs a fresh session on next play
   document.querySelectorAll('.ch-tile').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
   document.documentElement.style.setProperty('--accent', CH[id].color);
@@ -1358,9 +1364,11 @@ function selectCh(id, el) {
     if (id === 'archive') pickArchiveSession();
     audio.src = CH[id].audioSrc;
     audio.load();
+    sessionLoaded = true;
     audio.play().catch(() => {});
     document.getElementById('np-title').textContent = CH[id].title;
     document.getElementById('np-meta').textContent  = CH[id].meta;
+    document.getElementById('footer-r').textContent = CH[id].meta;
     resetSync();
     updateMediaSession();
   }

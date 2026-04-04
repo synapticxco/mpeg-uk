@@ -8,6 +8,7 @@
  *   - Everything else: network-first
  *
  * Deploy policy: bump CACHE_VERSION on every audio/session deploy.
+ *   deep-relay-v8: fixed cacheFirstAudio — URL-only cache key, no Range header on fetch
  *   deep-relay-v7: fixed Phase 5 endings for silence, sol5111, arecibo (distinct seeds)
  *   deep-relay-v6: re-rendered 7 session(s), seed-base 20260408
  *   deep-relay-v5: re-rendered 7 session(s), seed-base 20260404
@@ -16,7 +17,7 @@
  *   v1 → v2: re-rendered all 7 Archive sessions (April 2026)
  */
 
-const CACHE_VERSION = 'deep-relay-v7';
+const CACHE_VERSION = 'deep-relay-v8';
 
 // Assets cached immediately on install (the app shell)
 const SHELL_ASSETS = [
@@ -96,14 +97,25 @@ self.addEventListener('fetch', event => {
 // ── Cache strategies ─────────────────────────────────────────────────────────
 
 async function cacheFirstAudio(request) {
-  const cached = await caches.match(request);
+  // Normalise the cache key to URL-only — audio requests always carry a Range
+  // header which varies per chunk.  Using the raw request as the key means every
+  // new range value is a cache miss and Chrome rejects a full-200 response served
+  // back against a specific Range request.  Stripping the header here ensures all
+  // requests for the same file share one cache entry.
+  const cacheKey = new Request(request.url);
+  const cache    = await caches.open(CACHE_VERSION);
+  const cached   = await cache.match(cacheKey);
   if (cached) return cached;
 
   try {
-    const response = await fetch(request);
+    // Fetch without a Range header — mpeg.uk returns a full 200 for any request
+    // anyway (no byte-range support), so normalising here is harmless and avoids
+    // the browser rejecting a 200 served in response to a specific Range request.
+    const fullRequest = new Request(request.url, { method: 'GET' });
+    const response    = await fetch(fullRequest);
     if (response.ok) {
-      const cache = await caches.open(CACHE_VERSION);
-      cache.put(request, response.clone()); // cache in background
+      cache.put(cacheKey, response.clone()); // cache full file; response stream
+                                             // returned to browser simultaneously
     }
     return response;
   } catch {
