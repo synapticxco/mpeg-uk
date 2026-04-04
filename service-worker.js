@@ -8,13 +8,14 @@
  *   - Everything else: network-first
  *
  * Deploy policy: bump CACHE_VERSION on every audio/session deploy.
+ *   deep-relay-v6: re-rendered 7 session(s), seed-base 20260408
  *   deep-relay-v5: re-rendered 7 session(s), seed-base 20260404
  *   deep-relay-v4: re-rendered 7 session(s), seed-base 20260201
  *   deep-relay-v3: re-rendered 7 session(s), seed-base 20260101
  *   v1 → v2: re-rendered all 7 Archive sessions (April 2026)
  */
 
-const CACHE_VERSION = 'deep-relay-v5';
+const CACHE_VERSION = 'deep-relay-v6';
 
 // Assets cached immediately on install (the app shell)
 const SHELL_ASSETS = [
