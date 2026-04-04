@@ -1,14 +1,17 @@
 /**
- * deep relay — service worker v1
+ * deep relay — service worker v2
  *
  * Strategy:
  *   - Shell assets (HTML, manifest, icons): cache-first, background update
  *   - Audio files (MP3): cache on first play, serve from cache thereafter
  *   - Fonts (Google Fonts CDN): stale-while-revalidate
  *   - Everything else: network-first
+ *
+ * Deploy policy: bump CACHE_VERSION on every audio/session deploy.
+ *   v1 → v2: re-rendered all 7 Archive sessions (April 2026)
  */
 
-const CACHE_VERSION = 'deep-relay-v1';
+const CACHE_VERSION = 'deep-relay-v2';
 
 // Assets cached immediately on install (the app shell)
 const SHELL_ASSETS = [
@@ -17,14 +20,6 @@ const SHELL_ASSETS = [
   '/manifest.json',
   '/icon-192.png',
   '/icon-512.png',
-];
-
-// Audio files — large, cached on first request then served locally
-const AUDIO_ASSETS = [
-  '/alien_pilot.mp3',
-  '/trek_pilot.mp3',
-  '/bsg_pilot.mp3',
-  '/fw_pilot.mp3',
 ];
 
 // ── Install: cache the shell ────────────────────────────────────────────────
@@ -66,8 +61,8 @@ self.addEventListener('fetch', event => {
 
   if (!isLocal && !isFonts) return; // let browser handle cross-origin
 
-  // Audio: cache-first (after first load, always serve local)
-  if (isLocal && AUDIO_ASSETS.some(a => url.pathname.endsWith(a.replace('/', '')))) {
+  // Audio: cache-first — applies to all MP3s (franchise + archive)
+  if (isLocal && url.pathname.endsWith('.mp3')) {
     event.respondWith(cacheFirstAudio(request));
     return;
   }

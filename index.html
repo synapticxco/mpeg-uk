@@ -212,6 +212,12 @@
       letter-spacing: 0.16em; color: var(--text-dim); margin-bottom: 12px;
     }
     .ch-tiles { display: grid; grid-template-columns: repeat(5, 1fr); gap: 7px; }
+    .ch-sep {
+      grid-column: span 5;
+      border-top: 1px solid var(--border);
+      margin: 4px 0 2px;
+      opacity: 0.45;
+    }
     .ch-tile {
       padding: 11px 10px; border: 1px solid var(--border);
       border-radius: 3px; cursor: pointer;
@@ -496,9 +502,10 @@
       /* Hide signal-pill text on mobile — reduce header crowding */
       .signal-pill { display: none; }
 
-      /* Channel tiles — 2×2 grid + 5th full-width */
+      /* Channel tiles — Archive full-width, 4 demos in 2×2 grid below */
       .ch-tiles { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-      .ch-tiles .ch-tile:nth-child(5) { grid-column: span 2; }
+      .ch-tiles .ch-tile:first-child { grid-column: span 2; }
+      .ch-tiles .ch-sep            { grid-column: span 2; }
 
       .ch-tile { padding: 14px 12px; }
       .ch-name { font-size: 11px; margin-bottom: 4px; }
@@ -621,6 +628,11 @@
       <div class="channels">
         <div class="ch-lbl">channel select</div>
         <div class="ch-tiles">
+          <div class="ch-tile active" data-ch="archive" onclick="selectCh('archive',this)">
+            <span class="ch-name">The Archive</span>
+            <span class="ch-sub">Real history</span>
+          </div>
+          <div class="ch-sep"></div>
           <div class="ch-tile demo" data-ch="alien" onclick="selectCh('alien',this)">
             <span class="ch-name">Alien / WY</span>
             <span class="ch-sub">LV-426 sector</span>
@@ -636,10 +648,6 @@
           <div class="ch-tile demo" data-ch="fw" onclick="selectCh('fw',this)">
             <span class="ch-name">Firefly</span>
             <span class="ch-sub">Border space</span>
-          </div>
-          <div class="ch-tile active" data-ch="archive" onclick="selectCh('archive',this)">
-            <span class="ch-name">The Archive</span>
-            <span class="ch-sub">Real history</span>
           </div>
         </div>
       </div>
@@ -1403,7 +1411,21 @@ function pickFork(label) {
     f.style.transition = 'opacity 0.4s';
   });
   dismissFork();
-  addEntry('SYS', 'Path selected — ' + label + '. Transmission continues.');
+
+  const isMira = label.indexOf('MIRA') !== -1;
+
+  if (isMira) {
+    addEntry('SYS', 'Switching to MIRA sub-channel. Primary frequency maintained in background.');
+    setTimeout(() => {
+      addEntry('MIRA',
+        'Active transmission. ' + window.MIRA_TX_MSG +
+        '  ·  Origin: unresolved. Cipher format: unknown. Groups accumulate nightly.',
+        true
+      );
+    }, 1200);
+  } else {
+    addEntry('SYS', 'Primary frequency maintained. Transmission continues.');
+  }
 }
 
 /* ── Demo mode ── */
