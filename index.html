@@ -1018,6 +1018,20 @@ let forkDone    = false;
 let forkPending = false;  /* true while fork prompt is visible — pauses auto-scroll */
 let forkTimer   = null;   /* auto-dismiss after 45s */
 
+/* ── Listener analytics — fire-and-forget beacon to Cloudflare logs ── */
+let _m3Fired = false;   /* minute_3_reached guard — reset on new session */
+let _m8Fired = false;   /* minute_8_reached guard — reset on new session */
+
+function track(name, params) {
+  try {
+    const p = new URLSearchParams({ n: name, ch: ch || 'unknown' });
+    if (params) Object.keys(params).forEach(k => p.set(k, params[k]));
+    const url = '/_dr/ev?' + p.toString();
+    if (navigator.sendBeacon) navigator.sendBeacon(url);
+    else new Image().src = url;
+  } catch(_) {}
+}
+
 /* ── Ambient state ── */
 let ambGainNode  = null;  /* master gain for ambient chain */
 let ambSrcNodes  = [];    /* active ambient source/osc nodes */
@@ -1218,6 +1232,7 @@ function setAmbVol(v) {
 /* ── Toggle play ── */
 function togglePlay() {
   if (!playing) {
+    track('play_pressed');
     initAudio();
     startAmbient(ambType);   /* start ambient layer */
     if (ch === 'archive') pickArchiveSession();
@@ -1270,14 +1285,18 @@ audio.addEventListener('timeupdate', () => {
     showFork(CH[ch].fork);
     forkDone = true;
   }
+  if (!_m3Fired && t >= 180) { _m3Fired = true; track('minute_3_reached'); }
+  if (!_m8Fired && t >= 480) { _m8Fired = true; track('minute_8_reached'); }
 });
 
 audio.addEventListener('ended', () => {
   /* Smooth loop: 8-second ambient-only gap then restart speech */
+  track('session_completed');
   if (ambGainNode) {
     ambGainNode.gain.setTargetAtTime(ambVolume * 0.6, audioCtx.currentTime, 1.5);
   }
   setTimeout(() => {
+    track('loop_restart');
     if (ch === 'archive') {
       pickArchiveSession();
       audio.src = CH.archive.audioSrc;
@@ -1326,6 +1345,7 @@ function pickArchiveSession() {
 
 /* ── Channel select ── */
 function selectCh(id, el) {
+  track('channel_switched', { to: id });
   ch = id;
   document.querySelectorAll('.ch-tile').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
@@ -1353,6 +1373,8 @@ function resetSync() {
   forkDone    = false;
   forkPending = false;
   clearTimeout(forkTimer);
+  _m3Fired    = false;
+  _m8Fired    = false;
   const t = audio.currentTime || demoTime || 0;
   txIndex = CH[ch].tx.findIndex(tx => tx.t > t);
   if (txIndex === -1) txIndex = CH[ch].tx.length;
@@ -1379,6 +1401,7 @@ function addEntry(src, msg, mira) {
 
 function showFork(fork) {
   if (forkDone) return;
+  track('fork_shown');
   forkPending = true;
   const body = document.getElementById('log-body');
   const div  = document.createElement('div');
@@ -1415,6 +1438,7 @@ function pickFork(label) {
   dismissFork();
 
   const isMira = label.indexOf('MIRA') !== -1;
+  track('fork_option_selected', { choice: isMira ? 'mira' : 'primary' });
 
   if (isMira) {
     addEntry('SYS', 'Switching to MIRA sub-channel. Primary frequency maintained in background.');
@@ -1492,6 +1516,7 @@ function setSleep(minutes) {
     return;
   }
 
+  track('sleep_timer_set', { mins: minutes });
   sleepRemaining = minutes * 60;
   sleepBaseVol   = audio.volume || 0.85;
   sleepInterval  = setInterval(tickSleep, 1000);
@@ -1545,6 +1570,7 @@ let bedtime = false;
 
 function toggleBedtime() {
   bedtime = !bedtime;
+  if (bedtime) track('bedtime_mode_enabled');
   document.body.classList.toggle('bedtime', bedtime);
   const btn = document.getElementById('bedtime-btn');
   btn.classList.toggle('active', bedtime);
